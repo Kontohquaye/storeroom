@@ -1,0 +1,41 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "DM Sans", sans-serif;
+  font-optical-sizing: auto;
+}
+
+nav,
+nav .links {
+  display: flex;
+  align-items: center;
+}
+
+nav {
+  padding: 15px 0;
+  margin: 0 20px;
+  justify-content: space-between;
+}
+
+nav .links {
+  width: 50%;
+  justify-content: space-around;
+  font-weight: 700;
+}
+
+.links a {
+  color: #333;
+  text-decoration: none;
+}
+.links a:hover {
+  color: #f35525;
+}
+.links .active a {
+  color: #f35525;
+  border-bottom: 2px solid #f35525;
+  padding-bottom: 2px;
+}
