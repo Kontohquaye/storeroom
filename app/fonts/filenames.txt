@@ -1,0 +1,10 @@
+filenames.txt
+WorkSans-Black.ttf
+WorkSans-Bold.ttf
+WorkSans-ExtraBold.ttf
+WorkSans-ExtraLight.ttf
+WorkSans-Light.ttf
+WorkSans-Medium.ttf
+WorkSans-Regular.ttf
+WorkSans-SemiBold.ttf
+WorkSans-Thin.ttf
