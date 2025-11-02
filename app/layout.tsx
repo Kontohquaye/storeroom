@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
-import Navbar from "@/components/Navbar";
 
 const workSans = localFont({
   src: [
@@ -67,10 +66,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${workSans.variable} antialiased`}>
-        <Navbar />
-        {children}
-      </body>
+      <body className={`${workSans.variable} antialiased`}>{children}</body>
     </html>
   );
 }
