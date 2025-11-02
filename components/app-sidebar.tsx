@@ -1,12 +1,4 @@
-import {
-  Calendar,
-  Home,
-  BookOpenCheck,
-  Trash,
-  Inbox,
-  Search,
-  Settings,
-} from "lucide-react";
+import { Home, BookOpenCheck, Trash, HandCoins, Settings } from "lucide-react";
 
 import {
   Sidebar,
@@ -20,6 +12,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
+import Link from "next/link";
+import { NavUser } from "./NavUser";
 
 // Menu items.
 const items = [
@@ -39,9 +33,9 @@ const items = [
     icon: Trash,
   },
   {
-    title: "Search",
+    title: "On sale",
     url: "#",
-    icon: Search,
+    icon: HandCoins,
   },
   {
     title: "Settings",
@@ -49,6 +43,16 @@ const items = [
     icon: Settings,
   },
 ];
+
+// deleted user data fetching for simplicity
+const data = {
+  user: {
+    name: "KT",
+    email: "k@example.com",
+    avatar:
+      "https://img.freepik.com/free-vector/young-boy-avatar-illustration_1308-175646.jpg",
+  },
+};
 
 export function AppSidebar() {
   const SIDEBAR_KEYBOARD_SHORTCUT = "b";
@@ -72,10 +76,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -83,7 +87,9 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>&copy; KT</SidebarFooter>
+      <SidebarFooter>
+        <NavUser user={data.user} />
+      </SidebarFooter>
     </Sidebar>
   );
 }

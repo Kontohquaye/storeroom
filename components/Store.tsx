@@ -1,5 +1,11 @@
+import { EmptyStore } from "./EmptyStore";
+
 const StoreRoom = async () => {
-  return <div className="content border-amber-300 border-2">addition</div>;
+  return (
+    <div className="content">
+      <EmptyStore />
+    </div>
+  );
 };
 
 export default StoreRoom;
