@@ -1,4 +1,5 @@
 import SearchBox from "@/components/Search";
+import SearchResults from "@/components/SearchResults";
 import StoreRoom from "@/components/Store";
 
 const DashContent = async ({
@@ -13,9 +14,7 @@ const DashContent = async ({
       <header className="flex justify-end p-0">
         <SearchBox query={query} />
       </header>
-      <main>
-        <StoreRoom />
-      </main>
+      <main>{query ? <SearchResults query={query} /> : <StoreRoom />}</main>
     </div>
   );
 };

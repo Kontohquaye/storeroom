@@ -1,9 +1,12 @@
+import DisplayStore from "./DisplayStore";
 import { EmptyStore } from "./EmptyStore";
 
 const StoreRoom = async () => {
+  const show = true;
   return (
     <div className="content">
-      <EmptyStore />
+      {show && <DisplayStore />}
+      {!show && <EmptyStore />}
     </div>
   );
 };
