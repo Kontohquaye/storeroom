@@ -5,14 +5,20 @@ import Link from "next/link";
 import { RefObject } from "react";
 // import { useRef } from "react";
 
-const ResetSearch = ({ ref }: { ref: RefObject<HTMLFormElement | null> }) => {
+const ResetSearchProduct = ({
+  ref,
+  id,
+}: {
+  ref: RefObject<HTMLFormElement | null>;
+  id: string;
+}) => {
   // const form = document.querySelector(".search-form") as HTMLFormElement;
   const handleReset = () => {
     if (ref) ref.current?.reset();
   };
   return (
     <button className="px-1">
-      <Link href={"/dashboard"}>
+      <Link href={`/storeroom/details/${id}`}>
         <X
           className="hover:text-red-400 hover:cursor-pointer"
           onClick={handleReset}
@@ -22,4 +28,4 @@ const ResetSearch = ({ ref }: { ref: RefObject<HTMLFormElement | null> }) => {
   );
 };
 
-export default ResetSearch;
+export default ResetSearchProduct;

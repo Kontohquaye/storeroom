@@ -1,5 +1,5 @@
 // import { IconFolderCode } from "@tabler/icons-react";
-import { ArrowUpRightIcon, FolderPlus } from "lucide-react";
+import { ArrowUpRightIcon, FolderUp } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,23 +12,23 @@ import {
 } from "@/components/ui/empty";
 import Link from "next/link";
 
-export function EmptyStore() {
+export function EmptyProducts() {
   return (
     <Empty>
       <EmptyHeader>
         <EmptyMedia variant="icon">
-          <FolderPlus />
+          <FolderUp />
         </EmptyMedia>
-        <EmptyTitle>No Stores Yet</EmptyTitle>
+        <EmptyTitle>No Items Yet</EmptyTitle>
         <EmptyDescription>
-          You haven&apos;t created any storerooms yet. Get started by creating
-          your first storeroom.
+          You haven&apos;t added any storerooms yet. Get started by creating
+          your first storeroom item.
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
         <div className="flex gap-2">
-          <Link href="/storeroom/create">
-            <Button>Create Store</Button>
+          <Link href="/storeroom/product/create">
+            <Button>Add item</Button>
           </Link>
 
           {/* <Button variant="outline">Import Project</Button> */}
@@ -38,7 +38,7 @@ export function EmptyStore() {
             className="text-muted-foreground"
             size="sm"
           >
-            <Link href="/learn-more" target="_blank" rel="noreferrer">
+            <Link href="/learn-more/product" target="_blank" rel="noreferrer">
               Learn More <ArrowUpRightIcon />
             </Link>
           </Button>

@@ -1,4 +1,10 @@
-import { Home, BookOpenCheck, Trash, HandCoins, Settings } from "lucide-react";
+import {
+  Home,
+  BookOpenCheck,
+  Trash,
+  HandCoins,
+  FolderPlus,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -38,9 +44,9 @@ const items = [
     icon: HandCoins,
   },
   {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
+    title: "Create Store",
+    url: "/storeroom/create",
+    icon: FolderPlus,
   },
 ];
 

@@ -1,14 +1,14 @@
 "use client";
 import Form from "next/form";
 import { Search } from "lucide-react";
-import ResetSearch from "./SearchFormReset";
 import { useRef } from "react";
+import ResetSearchProduct from "./ResetSearchProducts";
 
-const SearchBox = ({ query }: { query?: string }) => {
+const SearchProducts = ({ query, id }: { query?: string; id: string }) => {
   const formRef = useRef<HTMLFormElement>(null);
   return (
     <Form
-      action={"/dashboard"}
+      action={`/storeroom/details/${id}`}
       ref={formRef}
       className="search-form relative flex items-center bg-white mb-10 focus:bg-none  border-2 rounded-full border-[#333] overflow-hidden"
     >
@@ -22,10 +22,10 @@ const SearchBox = ({ query }: { query?: string }) => {
         <button className="search px-0.5 " type="submit">
           <Search className="hover:text-red-400 hover:cursor-pointer" />
         </button>
-        {query && <ResetSearch ref={formRef} />}
+        {query && <ResetSearchProduct ref={formRef} id={id} />}
       </div>
     </Form>
   );
 };
 
-export default SearchBox;
+export default SearchProducts;

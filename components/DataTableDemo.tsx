@@ -41,6 +41,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 const data: Store[] = [
   {
@@ -250,6 +251,7 @@ export const columns: ColumnDef<Store>[] = [
     enableHiding: false,
   },
   {
+    enableHiding: false,
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
@@ -273,6 +275,7 @@ export const columns: ColumnDef<Store>[] = [
     ),
   },
   {
+    enableHiding: false,
     accessorKey: "storeName",
     header: ({ column }) => {
       return (
@@ -286,7 +289,14 @@ export const columns: ColumnDef<Store>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("storeName")}</div>
+      <div className="lowercase">
+        <Link
+          href={`/storeroom/details/${row.original.id}`}
+          className="underline"
+        >
+          {row.getValue("storeName")}
+        </Link>
+      </div>
     ),
   },
   {
@@ -340,6 +350,7 @@ export const columns: ColumnDef<Store>[] = [
     ),
   },
   {
+    enableHiding: false,
     accessorKey: "createdAt",
     header: ({ column }) => {
       return (
@@ -378,8 +389,12 @@ export const columns: ColumnDef<Store>[] = [
               Copy store name
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View details</DropdownMenuItem>
-            <DropdownMenuItem>Edit store details</DropdownMenuItem>
+            <Link href={`/storeroom/details/${store.id}`}>
+              <DropdownMenuItem>View store</DropdownMenuItem>
+            </Link>
+            <Link href={`/storeroom/edit/${store.id}`}>
+              <DropdownMenuItem>Edit store details</DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       );
