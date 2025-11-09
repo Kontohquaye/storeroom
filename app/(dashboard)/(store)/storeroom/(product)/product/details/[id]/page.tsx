@@ -10,11 +10,11 @@ const ProductDetails = async ({
   const { id } = await params;
   return (
     <div className="container min-w-full">
-      <SiteHeader id={id} />
+      <SiteHeader id={id} heading="Product details" />
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <ProductCard />
+            <ProductCard id={id} />
 
             <div className="px-4 lg:px-6">
               <CustomChart />

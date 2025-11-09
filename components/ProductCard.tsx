@@ -9,8 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ButtonTooltip } from "./ButtonTooltip";
 
-export function ProductCard() {
+export function ProductCard({ id }: { id: string }) {
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
@@ -31,6 +32,18 @@ export function ProductCard() {
             Total amount in cedis <Banknote className="size-5" />
           </div>
           <div className="text-muted-foreground">GHS 234,567.89</div>
+          <div className="buttons flex items-center max-w-full overflow-hidden gap-1">
+            <ButtonTooltip
+              name={"update"}
+              tip={"update stock"}
+              to={`/storeroom/product/details/${id}/update-stock`}
+            />
+            <ButtonTooltip
+              name={"to sales"}
+              tip={"move to sales"}
+              to={`/storeroom/product/details/${id}/move-to-sales`}
+            />
+          </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">

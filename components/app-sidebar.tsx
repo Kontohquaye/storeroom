@@ -74,7 +74,7 @@ export function AppSidebar() {
                 height={35}
                 alt="storeroom logo"
               />
-              <h1 className="font-bold text-xl">Dashboard</h1>
+              <h1 className="font-bold text-xl">Storeroom</h1>
             </div>
           </SidebarGroupLabel>
           <SidebarGroupContent>

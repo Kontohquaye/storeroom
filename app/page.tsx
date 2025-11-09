@@ -5,9 +5,15 @@ import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#333] font-sans dark:bg-black">
-      <Navbar />
-      <div style={{ width: "100%", height: "600px", position: "relative" }}>
+    <div className="flex min-h-screen items-center justify-center  font-sans bg-[#333]">
+      <div
+        style={{
+          width: "100%",
+          height: "100vh",
+          position: "relative",
+        }}
+      >
+        <Navbar />
         <Prism
           animationType="rotate"
           timeScale={0.5}

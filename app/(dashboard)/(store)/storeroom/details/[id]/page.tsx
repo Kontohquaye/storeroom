@@ -15,11 +15,12 @@ const StoreDetails = async ({
   const { id } = await params;
   const query = (await searchParams).query;
   const productAdded = false;
+  const heading = "Storeroom Details";
   return (
     <div className="container min-w-full">
       {!productAdded ? (
         <div className="container min-w-full">
-          <SiteHeader id={id} />
+          <SiteHeader id={id} heading={heading} />
           <header className="flex justify-between items-center p-0 mt-2">
             <Link href="/storeroom/product/create" className="mb-10  ">
               <Button variant={"secondary"} className="hover:cursor-pointer">

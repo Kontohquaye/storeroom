@@ -18,9 +18,10 @@ import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/PageHeader";
 
 const CreatStore = () => {
+  const heading = "Storeroom Entry";
   return (
     <div className="content">
-      <SiteHeader />
+      <SiteHeader heading={heading} />
 
       <div className="content ml-6 mt-4 flex justify-center items-center ">
         <div className="w-full max-w-2xl flex flex-col gap-6">

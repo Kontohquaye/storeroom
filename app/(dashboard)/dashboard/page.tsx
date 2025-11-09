@@ -10,9 +10,10 @@ const DashContent = async ({
 }) => {
   const query = (await searchParams).query;
   // console.log(query);
+  const heading = "Dashboard";
   return (
     <div className="content ">
-      <SiteHeader />
+      <SiteHeader heading={heading} />
       <header className="flex justify-end p-0 mt-2">
         <SearchBox query={query} />
       </header>
