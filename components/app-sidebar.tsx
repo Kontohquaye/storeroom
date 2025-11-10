@@ -1,10 +1,4 @@
-import {
-  Home,
-  BookOpenCheck,
-  Trash,
-  HandCoins,
-  FolderPlus,
-} from "lucide-react";
+import { Home, WalletCards, Hand, HandHelping, FolderPlus } from "lucide-react";
 
 import {
   Sidebar,
@@ -29,19 +23,19 @@ const items = [
     icon: Home,
   },
   {
-    title: "In stock",
-    url: "#",
-    icon: BookOpenCheck,
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: WalletCards,
   },
   {
-    title: "Damaged",
-    url: "#",
-    icon: Trash,
+    title: "More on products?",
+    url: "/learn-more/product",
+    icon: Hand,
   },
   {
-    title: "On sale",
-    url: "#",
-    icon: HandCoins,
+    title: "Store Guide ",
+    url: "/learn-more",
+    icon: HandHelping,
   },
   {
     title: "Create Store",

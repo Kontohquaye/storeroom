@@ -189,7 +189,7 @@ const UpdateStock = () => {
             </p>
           </div>
           <div className="btn w-full max-w-md">
-            <Button className="w-full">Create </Button>
+            <Button className="w-full">Update</Button>
           </div>
         </div>
       </div>
