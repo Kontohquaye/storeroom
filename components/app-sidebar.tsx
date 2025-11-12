@@ -1,4 +1,11 @@
-import { Home, WalletCards, Hand, HandHelping, FolderPlus } from "lucide-react";
+import {
+  Home,
+  WalletCards,
+  Hand,
+  HandHelping,
+  Cable,
+  FolderPlus,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -28,6 +35,16 @@ const items = [
     icon: WalletCards,
   },
   {
+    title: "Create Store",
+    url: "/storeroom/create",
+    icon: FolderPlus,
+  },
+  {
+    title: "Suppliers",
+    url: "/storeroom/suppliers",
+    icon: Cable,
+  },
+  {
     title: "More on products?",
     url: "/learn-more/product",
     icon: Hand,
@@ -36,11 +53,6 @@ const items = [
     title: "Store Guide ",
     url: "/learn-more",
     icon: HandHelping,
-  },
-  {
-    title: "Create Store",
-    url: "/storeroom/create",
-    icon: FolderPlus,
   },
 ];
 

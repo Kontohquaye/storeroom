@@ -1,9 +1,9 @@
-import { DataTableDemo } from "./DataTableDemo";
+import { DataTable } from "./DataTableDemo";
 
 const DisplayStore = () => {
   return (
     <div className="container">
-      <DataTableDemo />
+      <DataTable />
     </div>
   );
 };

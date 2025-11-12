@@ -16,16 +16,18 @@ import { Trash2 } from "lucide-react";
 export function DeleteDialog({
   storeName,
   productName,
+  supplierName,
 }: {
   storeName?: string;
   productName?: string;
+  supplierName?: string;
 }) {
   return (
     <Dialog>
       <form>
         <DialogTrigger asChild>
           {/* <Button variant="outline">Open Dialog</Button> */}
-          <Button variant={"destructive"}>
+          <Button variant={"destructive"} className="cursor-pointer">
             <Trash2 />
             Delete
           </Button>
@@ -35,7 +37,15 @@ export function DeleteDialog({
             <DialogTitle>Confirm Delete</DialogTitle>
             <DialogDescription>
               To confirm delete, enter{" "}
-              {storeName ? storeName : productName ? productName : "name"}{" "}
+              <b>
+                {storeName
+                  ? storeName
+                  : productName
+                    ? productName
+                    : supplierName
+                      ? supplierName
+                      : "name"}{" "}
+              </b>
               here.... Click delete when you&apos;re done.
             </DialogDescription>
           </DialogHeader>

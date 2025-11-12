@@ -10,6 +10,14 @@ import { FolderUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/PageHeader";
+import { CreateSupplier } from "@/components/CreateSupplier";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const CeateProduct = () => {
   const heading = "Product Entry";
@@ -62,9 +70,31 @@ const CeateProduct = () => {
                     Enter quantity of damaged products or items (e.g., 19).
                   </FieldDescription>
                 </Field>
+
+                {/* Supplier details */}
+                {/* Name of Supplier */}
+                <div className="supplier flex items-center gap-0.5">
+                  <Field>
+                    <FieldLabel>Supplier</FieldLabel>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select supplier" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="container">Mark</SelectItem>
+                        <SelectItem value="Buckets">Sign Duhny</SelectItem>
+                        <SelectItem value="covers">Cofie</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FieldDescription>Select supplier.</FieldDescription>
+                    {/* popup create supplier */}
+                  </Field>
+                  <CreateSupplier />
+                </div>
               </FieldGroup>
             </FieldSet>
           </div>
+
           <div className="btn w-full max-w-md">
             <Button className="w-full">Create </Button>
           </div>
