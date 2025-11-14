@@ -2,6 +2,8 @@ import { SiteHeader } from "@/components/PageHeader";
 import SearchBox from "@/components/Search";
 import SearchResults from "@/components/SearchResults";
 import StoreRoom from "@/components/Store";
+import { auth } from "../../../auth";
+import { redirect, RedirectType } from "next/navigation";
 
 const DashContent = async ({
   searchParams,
@@ -11,6 +13,12 @@ const DashContent = async ({
   const query = (await searchParams).query;
   // console.log(query);
   const heading = "Dashboard";
+  // session management
+  const session = await auth();
+  if (!session?.user) {
+    return redirect("/login", RedirectType.replace);
+  }
+  console.log("Dashboard session:", session);
   return (
     <div className="content ">
       <SiteHeader heading={heading} />
