@@ -8,12 +8,12 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { CreateSupplier } from "./CreateSupplier";
-import Link from "next/link";
+// import Link from "next/link";
 import RefreshButton from "./RefereshButton";
 
 export function EmptySuppliersPage() {
   return (
-    <Empty className="from-muted/50 to-background h-full bg-gradient-to-b from-30%">
+    <Empty className="from-muted/50 to-background h-full bg-linear-to-b from-30%">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <ArchiveX />

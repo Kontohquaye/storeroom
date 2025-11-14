@@ -21,6 +21,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { NavUser } from "./NavUser";
+import { auth } from "../auth";
 
 // Menu items.
 const items = [
@@ -57,17 +58,17 @@ const items = [
 ];
 
 // deleted user data fetching for simplicity
-const data = {
-  user: {
-    name: "KT",
-    email: "k@example.com",
-    avatar:
-      "https://img.freepik.com/free-vector/young-boy-avatar-illustration_1308-175646.jpg",
-  },
-};
 
-export function AppSidebar() {
+export async function AppSidebar() {
   const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+  const session = await auth();
+  const data = {
+    user: {
+      name: session?.user?.name,
+      email: session?.user?.email,
+      avatar: session?.user?.image,
+    },
+  };
   return (
     <Sidebar>
       <SidebarContent>

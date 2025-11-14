@@ -1,4 +1,4 @@
-import Image from "next/image";
+// import Image from "next/image";
 import Prism from "@/components/Prism";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
@@ -6,14 +6,11 @@ import Navbar from "@/components/Navbar";
 export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center  font-sans bg-[#333]">
-      <div
-        style={{
-          width: "100%",
-          height: "100vh",
-          position: "relative",
-        }}
-      >
-        <Navbar />
+      {/* Nav */}
+      <Navbar />
+
+      {/* prism */}
+      <div style={{ width: "100%", height: "600px", position: "relative" }}>
         <Prism
           animationType="rotate"
           timeScale={0.5}
@@ -22,10 +19,12 @@ export default function Home() {
           scale={3.6}
           hueShift={0}
           colorFrequency={1}
-          noise={0.1}
+          noise={0}
           glow={1}
         />
       </div>
+
+      {/* content */}
       <div className="absolute  text-white flex flex-col justify-center items-center">
         <h1 className="sm:text-5xl font-bold text-4xl text-center">
           Welcome to Storeroom
