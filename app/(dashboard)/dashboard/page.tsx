@@ -15,19 +15,19 @@ const DashContent = async ({
   const heading = "Dashboard";
   // session management
   const session = await auth();
+  // console.log("Dashboard session:", session);
   if (!session?.user) {
     return redirect("/login", RedirectType.replace);
-  }
-  console.log("Dashboard session:", session);
-  return (
-    <div className="content ">
-      <SiteHeader heading={heading} />
-      <header className="flex justify-end p-0 mt-2">
-        <SearchBox query={query} />
-      </header>
-      <main>{query ? <SearchResults query={query} /> : <StoreRoom />}</main>
-    </div>
-  );
+  } else
+    return (
+      <div className="content ">
+        <SiteHeader heading={heading} />
+        <header className="flex justify-end p-0 mt-2">
+          <SearchBox query={query} />
+        </header>
+        <main>{query ? <SearchResults query={query} /> : <StoreRoom />}</main>
+      </div>
+    );
 };
 
 export default DashContent;
