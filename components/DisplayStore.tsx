@@ -1,4 +1,4 @@
-import { DataTable } from "./DataTableDemo";
+import { DataTable } from "./DataTable";
 
 const DisplayStore = () => {
   return (

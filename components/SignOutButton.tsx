@@ -5,9 +5,9 @@ import { signOutAction } from "@/app/actions/signout";
 
 export default function SignOutButton() {
   return (
-    <form action={signOutAction} className="flex items-center gap-1">
-      <LogOut />
+    <form action={signOutAction}>
       <Button variant="ghost" type="submit" className="p-0">
+        <LogOut />
         Log out
       </Button>
     </form>

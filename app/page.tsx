@@ -2,6 +2,7 @@
 import Prism from "@/components/Prism";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import { SanityLive } from "@/sanity/lib/live";
 
 export default function Home() {
   return (
@@ -41,6 +42,7 @@ export default function Home() {
           Get Started
         </Link>
       </div>
+      <SanityLive />
     </div>
   );
 }
