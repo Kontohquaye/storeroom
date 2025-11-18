@@ -32,13 +32,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
 
         token.id = roomUser?._id;
-        console.log("JWT Token:", token);
+        // console.log("JWT Token:", token);
       }
       return token;
     },
     async session({ session, token }) {
-      Object.assign(session, { id: token.id });
+      if (session.user) {
+        session.user.id = token.id as string; //  ensure exposed to session
+      }
       return session;
+      // Object.assign(session, { id: token.id });
+      // return session;
     },
   },
 });

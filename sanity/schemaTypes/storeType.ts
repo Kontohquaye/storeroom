@@ -32,7 +32,6 @@ export const storeType = defineType({
           { title: "Transit store", value: "transit store" },
           { title: "Storage unit", value: "storage unit" },
           { title: "Finished goods", value: "finished goods" },
-          { title: "Pharmaceuticals", value: "pharmaceuticals" },
           { title: "Others", value: "others" },
         ],
       },
@@ -56,10 +55,10 @@ export const storeType = defineType({
       type: "string",
       options: {
         list: [
-          { title: "Fashion & Apparel", value: "fashion and apparel" },
+          { title: "Fashion & Apparel", value: "fashion" },
           { title: "Cosmetics & Beauty", value: "cosmetics and beauty" },
           { title: "Groceries", value: "groceries" },
-          { title: "Electronic gadgets", value: "electronic gadgets" },
+          { title: "Electronic gadgets", value: "electronics" },
           { title: "Pharmaceuticals", value: "pharmaceuticals" },
           { title: "General merchandise", value: "general merchandise" },
           { title: "Mix up", value: "mix up" },

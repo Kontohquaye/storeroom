@@ -11,7 +11,14 @@ export default function Home() {
       <Navbar />
 
       {/* prism */}
-      <div style={{ width: "100%", height: "600px", position: "relative" }}>
+      <div
+        style={{
+          width: "100%",
+          height: "600px",
+          position: "relative",
+          minHeight: "100vh",
+        }}
+      >
         <Prism
           animationType="rotate"
           timeScale={0.5}
