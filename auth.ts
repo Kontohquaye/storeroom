@@ -23,5 +23,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return true;
     },
+    async jwt({ token, account, profile }) {
+      if (account && profile) {
+        const roomUser = await client
+          .withConfig({ useCdn: false })
+          .fetch(USER_QUERY_BY_EMAIL, {
+            email: profile.email,
+          });
+
+        token.id = roomUser?._id;
+        console.log("JWT Token:", token);
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      Object.assign(session, { id: token.id });
+      return session;
+    },
   },
 });
