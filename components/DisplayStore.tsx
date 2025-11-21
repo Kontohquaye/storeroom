@@ -1,9 +1,12 @@
+import { StoreListType } from "@/app/types/store";
 import { DataTable } from "./DataTable";
 
-const DisplayStore = () => {
+const DisplayStore = async ({ stores }: { stores: StoreListType[] }) => {
+  // fetch store
+
   return (
     <div className="container">
-      <DataTable />
+      <DataTable stores={stores} />
     </div>
   );
 };

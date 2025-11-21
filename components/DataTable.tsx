@@ -19,6 +19,7 @@ import {
   ChevronDown,
   MoreHorizontal,
 } from "lucide-react";
+import { Link as Attach } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -42,194 +43,12 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { StoreListType } from "@/app/types/store";
 
-const data: Store[] = [
-  {
-    id: "m5gr84i9",
-    location: "Kejetia",
-    status: "active",
-    createdAt: "22/09/2020",
-    storeType: "Warehouse",
-    storeName: "Main Store",
-    businessCategory: "Electronics",
-  },
-  {
-    id: "3u1reuv4",
-    location: "Ahodwo",
-    status: "inactive",
-    createdAt: "20/03/2012",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Agribusiness",
-  },
-  {
-    id: "3u1reuv4",
-    location: "Ahodwo",
-    status: "inactive",
-    createdAt: "02/03/2023",
-    storeType: "Retail",
-    storeName: "MiT Store",
-    businessCategory: "Agribusiness",
-  },
-  {
-    id: "5kma53ae",
-    location: "Ahodwo",
-    status: "inactive",
-    createdAt: "20/03/2012",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Agribusiness",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-  {
-    id: "bhqecj4p",
-    location: "Kwadaso",
-    status: "active",
-    createdAt: "11/11/2019",
-    storeType: "Retail",
-    storeName: "KT Store",
-    businessCategory: "Pharmaceuticals",
-  },
-];
-
-export type Store = {
-  id: string;
-  location: string;
-  status: "active" | "inactive";
-  createdAt: string;
-  storeType: string;
-  storeName: string;
-  businessCategory: string;
-};
-
-export const columns: ColumnDef<Store>[] = [
+export const columns: ColumnDef<StoreListType>[] = [
   {
     id: "select",
+
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -276,10 +95,11 @@ export const columns: ColumnDef<Store>[] = [
   },
   {
     enableHiding: false,
-    accessorKey: "storeName",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
+          className="text-left pl-0!"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -289,19 +109,20 @@ export const columns: ColumnDef<Store>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase">
+      <div className="capitalize">
         <Link
-          href={`/storeroom/details/${row.original.id}`}
-          className="underline"
+          href={`/storeroom/details/${row.original._id}`}
+          className="flex items-center"
         >
-          {row.getValue("storeName")}
+          {row.getValue("name")}
+          <Attach className="size-4" />
         </Link>
       </div>
     ),
   },
   {
     accessorKey: "location",
-    header: () => <div className="text-right">Location</div>,
+    header: () => <div className="text-left">Location</div>,
     cell: ({ row }) => {
       //   const amount = parseFloat(row.getValue("amount"));
 
@@ -312,15 +133,18 @@ export const columns: ColumnDef<Store>[] = [
       //   }).format(amount);
 
       return (
-        <div className="text-right font-medium">{row.getValue("location")}</div>
+        <div className=" capitalize font-medium">
+          {row.getValue("location")}
+        </div>
       );
     },
   },
   {
-    accessorKey: "storeType",
+    accessorKey: "type",
     header: ({ column }) => {
       return (
         <Button
+          className="pl-0!"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -328,15 +152,14 @@ export const columns: ColumnDef<Store>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("storeType")}</div>
-    ),
+    cell: ({ row }) => <div className="capitalize">{row.getValue("type")}</div>,
   },
   {
-    accessorKey: "businessCategory",
+    accessorKey: "category",
     header: ({ column }) => {
       return (
         <Button
+          className="pl-0!"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -346,16 +169,17 @@ export const columns: ColumnDef<Store>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("businessCategory")}</div>
+      <div className="lowercase">{row.getValue("category")}</div>
     ),
   },
   {
     enableHiding: false,
-    accessorKey: "createdAt",
+    accessorKey: "_createdAt",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
+          className="pl-0!"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Created
@@ -364,7 +188,7 @@ export const columns: ColumnDef<Store>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("createdAt")}</div>
+      <div className="lowercase">{row.getValue("_createdAt")}</div>
     ),
   },
   {
@@ -384,15 +208,15 @@ export const columns: ColumnDef<Store>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(store.storeName)}
+              onClick={() => navigator.clipboard.writeText(store.name)}
             >
               Copy store name
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <Link href={`/storeroom/details/${store.id}`}>
+            <Link href={`/storeroom/details/${store._id}`}>
               <DropdownMenuItem>View store</DropdownMenuItem>
             </Link>
-            <Link href={`/storeroom/edit/${store.id}`}>
+            <Link href={`/storeroom/edit/${store._id}`}>
               <DropdownMenuItem>Edit store details</DropdownMenuItem>
             </Link>
           </DropdownMenuContent>
@@ -402,7 +226,8 @@ export const columns: ColumnDef<Store>[] = [
   },
 ];
 
-export function DataTable() {
+export function DataTable({ stores }: { stores: StoreListType[] }) {
+  const data: StoreListType[] = stores;
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -435,11 +260,9 @@ export function DataTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter names..."
-          value={
-            (table.getColumn("storeName")?.getFilterValue() as string) ?? ""
-          }
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("storeName")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

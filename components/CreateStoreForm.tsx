@@ -28,6 +28,7 @@ const CreateStoreForm = () => {
   const [storeType, setStoreType] = useState("");
   const [status, setStatus] = useState("");
   const [category, setCategory] = useState("");
+  const [isPending, setIsPending] = useState(false);
 
   const storeData: storeDateType = {
     name,
@@ -39,9 +40,12 @@ const CreateStoreForm = () => {
 
   // create store handler
   const handleCreate = async () => {
+    setIsPending(true);
     const response = await createStore(storeData);
+    if (!response) toast.error("store name already exists");
     if (response) toast.success("store created successfully");
-    return router.push("/dashboard");
+    setIsPending(false);
+    if (response) return router.push("/dashboard");
   };
   return (
     <div className="container">
@@ -148,9 +152,15 @@ const CreateStoreForm = () => {
         </FieldSet>
       </div>
       <div className="btn w-full max-w-md">
-        <Button className="w-full" onClick={handleCreate}>
-          Create{" "}
-        </Button>
+        {isPending ? (
+          <Button className="w-full" onClick={handleCreate}>
+            <div className="loader"></div>
+          </Button>
+        ) : (
+          <Button className="w-full" onClick={handleCreate}>
+            Create
+          </Button>
+        )}
       </div>
     </div>
   );

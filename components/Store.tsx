@@ -1,12 +1,15 @@
 import DisplayStore from "./DisplayStore";
 import { EmptyStore } from "./EmptyStore";
+import { fetchStore } from "@/lib/actions";
 
 const StoreRoom = async () => {
-  const show = true;
+  const storeList = fetchStore();
+  const stores = await storeList;
+  // console.log(stores);
   return (
     <div className="content">
-      {show && <DisplayStore />}
-      {!show && <EmptyStore />}
+      {stores.length > 0 && <DisplayStore stores={stores} />}
+      {stores.length <= 0 && <EmptyStore />}
     </div>
   );
 };

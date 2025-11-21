@@ -31,7 +31,7 @@ const items = [
     icon: Home,
   },
   {
-    title: "Dashboard",
+    title: "My Store",
     url: "/dashboard",
     icon: WalletCards,
   },
