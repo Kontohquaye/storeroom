@@ -64,19 +64,27 @@ export const addSupplier = async (data: supplierType) => {
     _type: "reference",
     _ref: session?.user?.id,
   };
+  // console.log(user);
 
   try {
     const isSupplier = await client
       .withConfig({ useCdn: false })
-      .fetch(EXISTING_SUPPLIER, { name: data.name, email: data.email });
-    if (isSupplier) return false;
-    await writeClient.create({
-      _type: "supplier",
-      ...data,
-      owner: { ...user },
-    });
-
-    return true;
+      .fetch(EXISTING_SUPPLIER, {
+        owner: user._ref,
+        name: data.name.trimEnd(),
+        email: data.email.trimEnd(),
+      });
+    console.log(isSupplier);
+    if (isSupplier) {
+      return false;
+    } else {
+      await writeClient.create({
+        _type: "supplier",
+        ...data,
+        owner: { ...user },
+      });
+      return true;
+    }
   } catch (error) {
     console.log(error);
   }
@@ -113,7 +121,7 @@ export const createProduct = async (
           owner: { ...user },
         });
         // log results
-        console.log(result);
+        // console.log(result);
         return { message: "product created", created: true };
       }
     } else return { message: "product name exist", created: false };

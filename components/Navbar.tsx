@@ -8,7 +8,7 @@ const Navbar = () => {
         logo="/Logo.png"
         items={[
           { label: "Home", href: "/" },
-          //   { label: "About", href: "#" },
+          { label: "About", href: "/about" },
           //   { label: "Account", href: "#" },
           //   { label: "Contact", href: "#" },
         ]}

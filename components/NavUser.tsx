@@ -27,6 +27,7 @@ import {
 import SignOutButton from "./SignOutButton";
 import { sessionData } from "../app/types/session";
 import { getAvatarFallback } from "@/lib/utils";
+import Link from "next/link";
 
 export function NavUser({ user }: sessionData) {
   const { isMobile } = useSidebar();
@@ -89,8 +90,13 @@ export function NavUser({ user }: sessionData) {
             <DropdownMenuSeparator /> */}
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+                <Link
+                  href={`/account/${user?.id}`}
+                  className="flex items-center"
+                >
+                  <BadgeCheck />
+                  Account
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />

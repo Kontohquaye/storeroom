@@ -13,8 +13,12 @@ import { Eye } from "lucide-react";
 import { SiteHeader } from "@/components/PageHeader";
 import { CreateSupplier } from "@/components/CreateSupplier";
 import { EmptySuppliersPage } from "@/components/EmptySuppliers";
+import { client } from "@/sanity/client";
+import { CHECK_SUPPLIERS } from "@/sanity/lib/queries/suppliers";
+import { auth } from "@/auth";
+import { SupplierListType } from "@/app/types/supplier";
 
-const suppliers = [
+const suppliers1 = [
   {
     name: "John Doe",
     email: "john.doe@example.com",
@@ -53,15 +57,20 @@ const suppliers = [
   },
 ];
 
-const Suppliers = () => {
+const Suppliers = async () => {
+  const session = await auth();
+  const suppliers = await client.fetch(CHECK_SUPPLIERS, {
+    owner: session?.user?.id,
+  });
+  // console.log(suppliers);
   const id = "1";
-  const have = false; // Empty array to simulate no suppliers
+  // const have = false; // Empty array to simulate no suppliers
   return (
-    <div className="container">
+    <div className="container min-w-full">
       {/* Table */}
       <SiteHeader heading="Suppliers" />
       <div className="table-container p-2 mt-2">
-        {!have ? (
+        {suppliers.length <= 0 ? (
           <EmptySuppliersPage />
         ) : (
           <Table>
@@ -76,13 +85,13 @@ const Suppliers = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {suppliers.map((supplier) => (
+              {suppliers.map((supplier: SupplierListType) => (
                 <TableRow key={supplier.name}>
                   {/* <Link href={``}></Link> */}
                   <TableCell className="font-medium">{supplier.name}</TableCell>
                   <TableCell>{supplier.email}</TableCell>
                   <TableCell>{supplier.phone}</TableCell>
-                  <TableCell>{supplier.country}</TableCell>
+                  <TableCell>{supplier.address}</TableCell>
                   <TableCell className="text-right">
                     {/* use id from database */}
                     <Link

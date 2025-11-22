@@ -1,6 +1,9 @@
+import { ProductTemplateType } from "@/app/types/product";
 import { CustomChart } from "@/components/CustomChart";
 import { SiteHeader } from "@/components/PageHeader";
 import { ProductCard } from "@/components/ProductCard";
+import { client } from "@/sanity/client";
+import { FETCH_SPECIFIC_PRODUCT } from "@/sanity/lib/queries/products";
 
 const ProductDetails = async ({
   params,
@@ -8,13 +11,20 @@ const ProductDetails = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
+  const product: ProductTemplateType = await client.fetch(
+    FETCH_SPECIFIC_PRODUCT,
+    {
+      product_id: id,
+    }
+  );
+  // console.log(product);
   return (
     <div className="container min-w-full">
       <SiteHeader id={id} heading="Product details" edit={true} />
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <ProductCard id={id} />
+            <ProductCard id={id} product={product} />
 
             <div className="px-4 lg:px-6">
               <CustomChart />

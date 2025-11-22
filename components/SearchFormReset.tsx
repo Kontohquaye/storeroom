@@ -14,7 +14,7 @@ const ResetSearch = ({ ref }: { ref: RefObject<HTMLFormElement | null> }) => {
     <button className="px-1">
       <Link href={"/dashboard"}>
         <X
-          className="hover:text-red-400 hover:cursor-pointer"
+          className="hover:text-red-400 hover:cursor-pointer  "
           onClick={handleReset}
         />
       </Link>

@@ -18,7 +18,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 const SupplierDetails = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [email, setEmail] = useState("");
@@ -40,12 +40,22 @@ const SupplierDetails = () => {
   //   handle add supplier
   const handleAddSupplier = async () => {
     setIsPending(true);
+    if (!name || !contact || !email || !address || !country || !status) {
+      setIsPending(false);
+      return toast.error("All fields are required");
+    }
     const response = await addSupplier(supplierDetails);
     // console.log(results);
-    if (!response) toast.error("supplier already exists");
-    if (response) toast.success("supplier created successfully");
-    setIsPending(false);
-    if (response) return router.push("/dashboard");
+    if (!response) {
+      setIsPending(false);
+      toast.error("supplier already exists");
+    }
+
+    if (response) {
+      toast.success("supplier created successfully");
+      setIsPending(false);
+      return window.location.reload();
+    }
   };
   return (
     <div className="container overflow-y-scroll">
@@ -55,7 +65,7 @@ const SupplierDetails = () => {
           <Input
             id="name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value.trimEnd())}
             placeholder="Akosah Ltd"
           />
         </div>
@@ -76,7 +86,7 @@ const SupplierDetails = () => {
             type="email"
             placeholder="akltd@service.co"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value.trimEnd())}
           />
         </div>
         <div className="grid gap-3">

@@ -1,7 +1,7 @@
 import {
   Home,
   WalletCards,
-  Hand,
+  Blocks,
   HandHelping,
   Cable,
   FolderPlus,
@@ -45,15 +45,16 @@ const items = [
     url: "/storeroom/suppliers",
     icon: Cable,
   },
-  {
-    title: "More on products?",
-    url: "/learn-more/product",
-    icon: Hand,
-  },
+
   {
     title: "Store Guide ",
     url: "/learn-more",
     icon: HandHelping,
+  },
+  {
+    title: "About storeroom",
+    url: "/about",
+    icon: Blocks,
   },
 ];
 
@@ -67,6 +68,7 @@ export async function AppSidebar() {
       name: session?.user?.name,
       email: session?.user?.email,
       avatar: session?.user?.image,
+      id: session?.user?.id,
     },
   };
   return (

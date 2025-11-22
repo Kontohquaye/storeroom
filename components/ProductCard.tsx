@@ -10,28 +10,36 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ButtonTooltip } from "./ButtonTooltip";
+import { ProductTemplateType } from "@/app/types/product";
+import { calculateNotDamaged, productPerformance, toCedis } from "@/lib/utils";
 
-export function ProductCard({ id }: { id: string }) {
+export function ProductCard({
+  id,
+  product,
+}: {
+  id: string;
+  product: ProductTemplateType;
+}) {
+  // console.log(Number(product.instock) * Number(product.unit_price));
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>In Stock</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            2,345
+            {product.instock}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <TrendingUp />
-              +12.5%
-            </Badge>
+            <Badge variant="default">- damaged</Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
             Total amount in cedis <Banknote className="size-5" />
           </div>
-          <div className="text-muted-foreground">GHS 234,567.89</div>
+          <div className="text-muted-foreground">
+            {toCedis(product.instock, product.unit_price)}
+          </div>
           <div className="buttons flex items-center max-w-full overflow-hidden gap-1">
             <ButtonTooltip
               name={"update"}
@@ -50,12 +58,20 @@ export function ProductCard({ id }: { id: string }) {
         <CardHeader>
           <CardDescription>On Sale</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
+            {product.on_sale}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <TrendingDown />
-              -20%
+            <Badge
+              variant="secondary"
+              className="bg-blue-500 text-white dark:bg-blue-600"
+            >
+              {Number(product.on_sale) <= 0 ? <TrendingDown /> : <TrendingUp />}
+              {productPerformance(
+                product.instock,
+                product.on_sale,
+                product.damaged,
+                "onSale"
+              ) + "%"}
             </Badge>
           </CardAction>
         </CardHeader>
@@ -63,19 +79,26 @@ export function ProductCard({ id }: { id: string }) {
           <div className="line-clamp-1 flex gap-2 font-medium">
             Total amount in cedis <Banknote className="size-5" />
           </div>
-          <div className="text-muted-foreground">GHS 6,445.00</div>
+          <div className="text-muted-foreground">
+            {toCedis(product.on_sale, product.unit_price)}
+          </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Damaged</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            78
+            {product.damaged}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <TrendingUp />
-              +12.5%
+            <Badge variant="destructive">
+              {Number(product.damaged) <= 0 ? <TrendingDown /> : <TrendingUp />}
+              {productPerformance(
+                product.instock,
+                product.on_sale,
+                product.damaged,
+                "damaged"
+              ) + "%"}
             </Badge>
           </CardAction>
         </CardHeader>
@@ -83,19 +106,34 @@ export function ProductCard({ id }: { id: string }) {
           <div className="line-clamp-1 flex gap-2 font-medium">
             Total amount in cedis <Banknote className="size-5" />
           </div>
-          <div className="text-muted-foreground">GHS ,879.00</div>
+          <div className="text-muted-foreground">
+            {toCedis(product.damaged, product.unit_price)}
+          </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>In Good State</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            300,044
+            {calculateNotDamaged(
+              product.instock,
+              product.on_sale,
+              product.damaged
+            )}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <TrendingUp />
-              +4.5%
+              {Number(product.on_sale) + Number(product.instock) <= 0 ? (
+                <TrendingDown />
+              ) : (
+                <TrendingUp />
+              )}
+              {productPerformance(
+                product.instock,
+                product.on_sale,
+                product.damaged,
+                "inGoodState"
+              ) + "%"}
             </Badge>
           </CardAction>
         </CardHeader>

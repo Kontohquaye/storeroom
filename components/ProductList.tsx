@@ -96,7 +96,7 @@ export async function ProductList({
               </TableFooter> */}
             </Table>
           ) : (
-            <EmptyProducts />
+            <EmptyProducts store={store_id} />
           )}
         </div>
       )}

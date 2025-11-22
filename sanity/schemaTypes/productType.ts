@@ -23,6 +23,11 @@ export const productType = defineType({
       to: [{ type: "supplier" }],
     }),
     defineField({
+      name: "unit_price",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: "store",
       type: "reference",
       validation: (Rule) => Rule.required(),

@@ -48,7 +48,8 @@ const EditProduct = () => {
                     placeholder="200 (max:15 char)"
                   />
                   <FieldDescription>
-                    Enter quantity in storage (e.g., 199).
+                    Enter quantity in storage (e.g., 199) excluding damaged
+                    ones.
                   </FieldDescription>
                 </Field>
                 {/* Damaged */}

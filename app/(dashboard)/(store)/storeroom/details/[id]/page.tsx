@@ -3,7 +3,11 @@ import { SiteHeader } from "@/components/PageHeader";
 import { ProductList } from "@/components/ProductList";
 import SearchProducts from "@/components/SearchProducts";
 import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
+import { client } from "@/sanity/client";
+import { FETCH_ALL_STORE_PRODUCTS } from "@/sanity/lib/queries/products";
 import Link from "next/link";
+// import Link from "next/link";
 
 const StoreDetails = async ({
   params,
@@ -14,11 +18,15 @@ const StoreDetails = async ({
 }) => {
   const { id } = await params;
   const query = (await searchParams).query;
-  const productAdded = false;
+  const productList = await client.fetch(FETCH_ALL_STORE_PRODUCTS, {
+    store_id: id,
+  });
+  // console.log(productList.length);
+  // const productAdded = false;
   const heading = "Storeroom Details";
   return (
     <div className="container min-w-full">
-      {!productAdded ? (
+      {productList.length > 0 ? (
         <div className="container min-w-full">
           <SiteHeader heading={heading} />
           <header className="flex justify-between items-center p-0 mt-2">
@@ -37,7 +45,7 @@ const StoreDetails = async ({
       ) : (
         <div className="content-empty">
           <SiteHeader />
-          <EmptyProducts />
+          <EmptyProducts store={id} />
         </div>
       )}
     </div>

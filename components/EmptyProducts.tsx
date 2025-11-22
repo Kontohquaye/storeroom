@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/empty";
 import Link from "next/link";
 
-export function EmptyProducts() {
+export function EmptyProducts({ store }: { store?: string }) {
   return (
     <Empty>
       <EmptyHeader>
@@ -27,7 +27,7 @@ export function EmptyProducts() {
       </EmptyHeader>
       <EmptyContent>
         <div className="flex gap-2">
-          <Link href="/storeroom/product/create">
+          <Link href={`/storeroom/product/create?store=${store}`}>
             <Button>Add item</Button>
           </Link>
 

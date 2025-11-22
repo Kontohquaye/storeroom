@@ -38,6 +38,8 @@ const CreateProductDetails = ({
   const [onSale, setOnSale] = useState("");
   const [damaged, setDamaged] = useState("");
   const [supplier, setSupplier] = useState("");
+  const [unitPrice, setUnitPrice] = useState("");
+  const [isPending, setIsPending] = useState(false);
   // const [hasSupplier, setHasSupplier] = useState(true);
   // const [suppliersList, setSuppliersList] = useState<SupplierListType[]>([]);
   //   console.log(name, inStock, damaged);
@@ -52,19 +54,27 @@ const CreateProductDetails = ({
     supplier: { _type: "reference", _ref: currentSupplier[0]?._id },
     store: { _type: "reference", _ref: store_id },
     damaged: damaged,
+    unit_price: unitPrice,
   };
 
   // creat product handler
   const handleCreateProduct = async () => {
-    if (!name || !inStock || !damaged || !supplier || !onSale)
+    setIsPending(true);
+    if (!name || !inStock || !damaged || !supplier || !onSale || !unitPrice) {
+      setIsPending(false);
       return toast.error("All fields required!");
+    }
 
     const response = await createProduct(name, data);
     // console.log(response?.created);
 
-    response?.created
-      ? router.push(`/storeroom/details/${store_id}`)
-      : toast.error(`${response?.message}`);
+    if (response?.created) {
+      setIsPending(false);
+      router.push(`/storeroom/details/${store_id}`);
+    } else {
+      setIsPending(false);
+      toast.error(`${response?.message}`);
+    }
 
     // if (result.length <= 0) {
     //   toast.error("Add a supplier first");
@@ -77,6 +87,7 @@ const CreateProductDetails = ({
   };
 
   const handleToast = () => {
+    setIsPending(false);
     toast.error("🥹add a supplier and refresh!");
   };
   return (
@@ -107,7 +118,21 @@ const CreateProductDetails = ({
               placeholder="200 (max:15 char)"
             />
             <FieldDescription>
-              Enter quantity in storage (e.g., 199).
+              Enter quantity in storage (e.g., 199) excluding damaged ones.
+            </FieldDescription>
+          </Field>
+          {/* Unit Price */}
+          <Field>
+            <FieldLabel htmlFor="unit_price">UnitPrice</FieldLabel>
+            <Input
+              id="unitPrice"
+              value={unitPrice}
+              onChange={(e) => setUnitPrice(e.target.value)}
+              type="number"
+              placeholder="200 (max:15 char)"
+            />
+            <FieldDescription>
+              Enter price for one (e.g., GHS 29).
             </FieldDescription>
           </Field>
           {/* Onsale */}
@@ -184,7 +209,7 @@ const CreateProductDetails = ({
             type="submit"
             onClick={handleCreateProduct}
           >
-            Create{" "}
+            {!isPending ? "Create" : <div className="loader size-3"></div>}
           </Button>
         </div>
       ) : (

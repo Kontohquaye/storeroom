@@ -2,6 +2,7 @@ export type ProductTemplateType = {
   name: string;
   on_sale: string;
   instock: string;
+  unit_price: string;
   supplier: {
     _type: string;
     _ref: string;
