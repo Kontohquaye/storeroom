@@ -1,9 +1,14 @@
 import { FolderUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/PageHeader";
 import CreateProductForm from "@/components/CreateProductForm";
 
-const CeateProduct = () => {
+const CeateProduct = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ store?: string }>;
+}) => {
+  const store = (await searchParams).store;
+  // console.log(store);
   const heading = "Product Entry";
   return (
     <div className="content">
@@ -17,10 +22,7 @@ const CeateProduct = () => {
           </div>
 
           {/* Create Product Ui */}
-          <CreateProductForm />
-          <div className="btn w-full max-w-md">
-            <Button className="w-full">Create </Button>
-          </div>
+          <CreateProductForm store_id={store} />
         </div>
       </div>
     </div>

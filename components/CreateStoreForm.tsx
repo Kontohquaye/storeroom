@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/field";
 import { useState } from "react";
 import { createStore } from "@/lib/actions";
-import { storeDateType } from "@/app/types/store";
+import { StoreDataType } from "@/app/types/store";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
@@ -30,7 +30,7 @@ const CreateStoreForm = () => {
   const [category, setCategory] = useState("");
   const [isPending, setIsPending] = useState(false);
 
-  const storeData: storeDateType = {
+  const storeData: StoreDataType = {
     name,
     location,
     type: storeType,

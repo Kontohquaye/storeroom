@@ -10,6 +10,14 @@ export const FETCH_USER_STORES = defineQuery(
   status, 
   type }`
 );
+
+export const FETCH_PRODUCT_STORE = defineQuery(
+  `*[_type == "store" && _id == $store_id ]{
+  name,
+  status, 
+  }`
+);
+
 export const EXISTING_STORE_NAME = defineQuery(
   `*[_type == "store" && name == $name ][0]`
 );

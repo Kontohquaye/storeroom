@@ -20,16 +20,19 @@ const StoreDetails = async ({
     <div className="container min-w-full">
       {!productAdded ? (
         <div className="container min-w-full">
-          <SiteHeader id={id} heading={heading} />
+          <SiteHeader heading={heading} />
           <header className="flex justify-between items-center p-0 mt-2">
-            <Link href="/storeroom/product/create" className="mb-10  ">
+            <Link
+              href={`/storeroom/product/create?store=${id}`}
+              className="mb-10  "
+            >
               <Button variant={"secondary"} className="hover:cursor-pointer">
                 Add item
               </Button>
             </Link>
             <SearchProducts id={id} query={query} />
           </header>
-          <ProductList query={query} />
+          <ProductList query={query} id={id} />
         </div>
       ) : (
         <div className="content-empty">

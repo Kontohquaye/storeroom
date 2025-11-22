@@ -112,10 +112,9 @@ export const columns: ColumnDef<StoreListType>[] = [
       <div className="capitalize">
         <Link
           href={`/storeroom/details/${row.original._id}`}
-          className="flex items-center"
+          className="flex items-center gap-1"
         >
-          {row.getValue("name")}
-          <Attach className="size-4" />
+          {row.getValue("name")} <Attach className="size-4" />
         </Link>
       </div>
     ),
