@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,22 +12,51 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { deleteStore } from "@/lib/actions";
 import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export function DeleteDialog({
   storeName,
   productName,
   supplierName,
+  store,
 }: {
   storeName?: string;
   productName?: string;
   supplierName?: string;
+  store?: {
+    id: string;
+    name: string;
+  };
 }) {
+  const [itemId, setItemId] = useState("");
+  const [isPending, setIsPending] = useState(false);
+  const handleDelete = async (ConfirmationId: string) => {
+    setIsPending(true);
+    const id = store?.id;
+
+    if (id && id == ConfirmationId) {
+      const res = await deleteStore({ id: store.id });
+      setIsPending(false);
+      if (res.deleted) toast.success(res.message);
+      if (res.deleted) return window.history.back();
+      if (!res.deleted) toast.error(res.message);
+    } else {
+      toast.error("enter correct confirmation token");
+      setIsPending(false);
+    }
+  };
+  const handleToast = () => {
+    toast.error("delete in progress");
+  };
   return (
     <Dialog>
       <form>
         <DialogTrigger asChild>
           {/* <Button variant="outline">Open Dialog</Button> */}
+
           <Button variant={"destructive"} className="cursor-pointer">
             <Trash2 />
             Delete
@@ -36,23 +66,35 @@ export function DeleteDialog({
           <DialogHeader>
             <DialogTitle>Confirm Delete</DialogTitle>
             <DialogDescription>
-              To confirm delete, enter{" "}
-              <b>
-                {storeName
-                  ? storeName
-                  : productName
-                    ? productName
-                    : supplierName
-                      ? supplierName
-                      : "name"}{" "}
-              </b>
-              here.... Click delete when you&apos;re done.
+              {store ? (
+                <div>
+                  To confirm {`${store?.name} store`} deletion, enter{" "}
+                  {`"${store?.id}"`}
+                </div>
+              ) : (
+                <div>
+                  {storeName
+                    ? storeName
+                    : productName
+                      ? productName
+                      : supplierName
+                        ? supplierName
+                        : "name"}{" "}
+                </div>
+              )}
+              Click delete when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" defaultValue="example" />
+              <Label htmlFor="name-1">Confirmation</Label>
+              <Input
+                id="name-1"
+                name="name"
+                defaultValue="example"
+                value={itemId}
+                onChange={(e) => setItemId(e.target.value)}
+              />
             </div>
             {/* <div className="grid gap-3">
               <Label htmlFor="username-1">Username</Label>
@@ -63,9 +105,25 @@ export function DeleteDialog({
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit" variant={"destructive"}>
-              Delete
-            </Button>
+
+            {isPending ? (
+              <Button
+                className="bg-blue-950"
+                type="submit"
+                variant={"default"}
+                onClick={handleToast}
+              >
+                <p className="loader" />
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                variant={"destructive"}
+                onClick={() => handleDelete(itemId)}
+              >
+                Delete
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </form>

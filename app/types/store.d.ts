@@ -6,6 +6,14 @@ export type StoreDataType = {
   category: string;
 };
 
+export type SingleStore = {
+  category: string;
+  location: string;
+  name: string;
+  status: string;
+  type: string;
+};
+
 export type StoreListType = {
   _id: string;
   location: string;

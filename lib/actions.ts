@@ -1,6 +1,6 @@
 "use server";
 import { ToSales, ProductTemplateType } from "@/app/types/product";
-import { StoreDataType, StoreListType } from "@/app/types/store";
+import { SingleStore, StoreDataType, StoreListType } from "@/app/types/store";
 import { supplierType } from "@/app/types/supplier";
 import { auth } from "@/auth";
 import { client } from "@/sanity/client";
@@ -10,11 +10,12 @@ import {
 } from "@/sanity/lib/queries/products";
 import {
   EXISTING_STORE_NAME,
+  FETCH_SINGLE_STORE,
   FETCH_USER_STORES,
 } from "@/sanity/lib/queries/store";
 import { EXISTING_SUPPLIER } from "@/sanity/lib/queries/suppliers";
 import { writeClient } from "@/sanity/lib/write-client";
-import { time } from "console";
+// import { time } from "console";
 
 export const createStore = async (data: StoreDataType) => {
   const session = await auth();
@@ -57,6 +58,55 @@ export const fetchStore = async () => {
   }));
   // console.log(storeList);
   return storeList;
+};
+
+// fetch_store_update
+export const fetchSingleStore = async (id: string) => {
+  const store = await client.fetch(FETCH_SINGLE_STORE, {
+    id: id,
+  });
+  return store;
+};
+
+// editStore
+export const editStore = async (id: string, data: SingleStore) => {
+  const res = await writeClient
+    .patch(id)
+    .set({
+      data,
+    })
+    .commit();
+  return { response: res };
+};
+
+export const deleteStore = async ({ id }: { id: string }) => {
+  try {
+    const products = await client.fetch(
+      `*[_type == "product" && store._ref == $store_id]{ _id }`,
+      { store_id: id }
+    );
+
+    // Step 2: Create a transaction
+    const tx = writeClient.transaction();
+
+    // Delete all products
+    products.forEach((p: { _id: string }) => {
+      tx.delete(p._id);
+    });
+
+    // Step 3: Delete the store
+    tx.delete(id);
+
+    // Commit the changes
+
+    const respose = await tx.commit();
+    if (respose.results.length > 0)
+      return { deleted: true, message: "success" };
+    return { deleted: false, message: "store non existent!" };
+  } catch (error) {
+    console.log(error);
+    return { deleted: false, message: "error on sever" };
+  }
 };
 
 // suppliers (add)
