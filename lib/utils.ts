@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import constants from "constants";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -63,4 +64,30 @@ export const productPerformance = (
     const absolutePercentage = Math.abs(Number(percentage.toFixed(1)));
     return absolutePercentage;
   }
+};
+
+export const convertTime = (date: Date) => {
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+
+  // convert 24h → 12h (no AM/PM)
+  hours = hours % 12 || 12;
+
+  return `${String(hours).padStart(2, "0")}:${minutes}:${seconds}`;
+};
+
+export const formatDate = (date: Date) => {
+  const formattedDate = date.toLocaleString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  return formattedDate;
+};
+
+export const getId = (path: string) => {
+  const split = path.split("/");
+  const id = split[split.length - 2];
+  return id;
 };

@@ -28,3 +28,10 @@ export type Product = {
   store: { _ref: string; _type: "reference" };
   supplier: { _ref: string; _type: "reference" };
 };
+
+export type ToSales = {
+  product: string;
+  quantity: string;
+  created: Date | undefined;
+  time: string;
+};

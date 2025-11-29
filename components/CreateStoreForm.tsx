@@ -41,6 +41,8 @@ const CreateStoreForm = () => {
   // create store handler
   const handleCreate = async () => {
     setIsPending(true);
+    if (!name || !location || !storeType || !status || !category)
+      return toast.error("Fill all fields") && setIsPending(false);
     const response = await createStore(storeData);
     if (!response) toast.error("store name already exists");
     if (response) toast.success("store created successfully");
@@ -151,6 +153,7 @@ const CreateStoreForm = () => {
           </FieldGroup>
         </FieldSet>
       </div>
+
       <div className="btn w-full max-w-md">
         {isPending ? (
           <Button className="w-full" onClick={handleCreate}>

@@ -1,16 +1,20 @@
 "use server";
-import { ProductTemplateType } from "@/app/types/product";
+import { ToSales, ProductTemplateType } from "@/app/types/product";
 import { StoreDataType, StoreListType } from "@/app/types/store";
 import { supplierType } from "@/app/types/supplier";
 import { auth } from "@/auth";
 import { client } from "@/sanity/client";
-import { CHECK_EXISTING_PRODUCT } from "@/sanity/lib/queries/products";
+import {
+  CHECK_EXISTING_PRODUCT,
+  FETCH_SPECIFIC_PRODUCT,
+} from "@/sanity/lib/queries/products";
 import {
   EXISTING_STORE_NAME,
   FETCH_USER_STORES,
 } from "@/sanity/lib/queries/store";
 import { EXISTING_SUPPLIER } from "@/sanity/lib/queries/suppliers";
 import { writeClient } from "@/sanity/lib/write-client";
+import { time } from "console";
 
 export const createStore = async (data: StoreDataType) => {
   const session = await auth();
@@ -128,4 +132,36 @@ export const createProduct = async (
   } catch (error) {
     console.log(error);
   }
+};
+
+// move to sale
+export const moveToSales = async (data: ToSales) => {
+  const product = await client.fetch(FETCH_SPECIFIC_PRODUCT, {
+    product_id: data.product,
+  });
+  if (!product) return { message: "no product created", res: false };
+  if (Number(product.instock) < Number(data.quantity))
+    return { message: "less quantity in stock", res: false };
+  await writeClient.create({
+    _type: "sales",
+    product: {
+      _type: "reference",
+      _ref: data.product,
+    },
+    quantity: data.quantity,
+    time: data.time,
+    created: data.created,
+  });
+  const newInstock = (
+    Number(product.instock) - Number(data.quantity)
+  ).toString();
+  const newOnSale = (
+    Number(product.on_sale) + Number(data.quantity)
+  ).toString();
+  if (product)
+    await writeClient
+      .patch(data.product)
+      .set({ instock: newInstock, on_sale: newOnSale })
+      .commit();
+  return { message: "sales update", res: true };
 };
