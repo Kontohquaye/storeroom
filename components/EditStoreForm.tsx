@@ -20,10 +20,10 @@ import { SingleStore } from "@/app/types/store";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { editStore } from "@/lib/actions";
-import ErrorPage from "./ErrorPage";
+import { notFound } from "next/navigation";
 
 const EditStoreForm = ({ id, store }: { id: string; store: SingleStore }) => {
-  if (!store) return <ErrorPage />;
+  if (!store) return notFound();
   const { name, category, location, type, status } = store;
   const [storeName, setStoreName] = useState(name);
   const [storeLocation, setStoreLocation] = useState(location);
@@ -33,11 +33,11 @@ const EditStoreForm = ({ id, store }: { id: string; store: SingleStore }) => {
   const [isPending, setIsPending] = useState(false);
 
   const data = {
-    category: storeName,
+    category: storeCategory,
     location: storeLocation,
-    name: storeType,
+    name: storeName,
     status: storeStatus,
-    type: storeCategory,
+    type: storeType,
   };
   const deleteParams = {
     id,

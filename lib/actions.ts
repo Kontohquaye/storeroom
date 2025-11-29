@@ -70,10 +70,20 @@ export const fetchSingleStore = async (id: string) => {
 
 // editStore
 export const editStore = async (id: string, data: SingleStore) => {
+  const session = await auth();
+  // console.log(session);
+
+  const user = {
+    _type: "reference",
+    _ref: session?.user?.id,
+  };
+
   const res = await writeClient
+    .withConfig({ useCdn: false })
     .patch(id)
     .set({
-      data,
+      ...data,
+      owner: { ...user },
     })
     .commit();
   return { response: res };
@@ -86,8 +96,27 @@ export const deleteStore = async ({ id }: { id: string }) => {
       { store_id: id }
     );
 
+    const productIds = products.map((p: { _id: string }) => p._id);
+
+    // 2. Fetch sales for ANY of the products
+    const sales = productIds.length
+      ? await client.fetch(
+          `*[_type == "sales" && product._ref in $productIds]{ _id }`,
+          { productIds }
+        )
+      : [];
+
+    // const sales = await client.fetch(
+    //   `*[_type == "sales" && product._ref == $product_id]{ _id }`,
+    //   { product_id: products._id }
+    // );
+
     // Step 2: Create a transaction
     const tx = writeClient.transaction();
+    // Delete all sales
+    sales.forEach((sale: { _id: string }) => {
+      tx.delete(sale._id);
+    });
 
     // Delete all products
     products.forEach((p: { _id: string }) => {

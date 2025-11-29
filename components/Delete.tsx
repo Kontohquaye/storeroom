@@ -57,7 +57,11 @@ export function DeleteDialog({
         <DialogTrigger asChild>
           {/* <Button variant="outline">Open Dialog</Button> */}
 
-          <Button variant={"destructive"} className="cursor-pointer">
+          <Button
+            variant={"destructive"}
+            type="button"
+            className="cursor-pointer"
+          >
             <Trash2 />
             Delete
           </Button>
@@ -67,10 +71,9 @@ export function DeleteDialog({
             <DialogTitle>Confirm Delete</DialogTitle>
             <DialogDescription>
               {store ? (
-                <div>
-                  To confirm {`${store?.name} store`} deletion, enter{" "}
-                  {`"${store?.id}"`}
-                </div>
+                <>
+                  {` To confirm ${store?.name} store deletion enter  "${store?.id}"`}
+                </>
               ) : (
                 <div>
                   {storeName
@@ -81,17 +84,16 @@ export function DeleteDialog({
                         ? supplierName
                         : "name"}{" "}
                 </div>
-              )}
+              )}{" "}
               Click delete when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="name-1">Confirmation</Label>
+              <Label htmlFor="confirmation">Confirmation</Label>
               <Input
-                id="name-1"
+                id="confirmation"
                 name="name"
-                defaultValue="example"
                 value={itemId}
                 onChange={(e) => setItemId(e.target.value)}
               />
