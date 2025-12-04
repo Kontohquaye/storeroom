@@ -21,3 +21,23 @@ export type SupplierListType = {
   phone: string;
   status: string;
 };
+
+export type SupplierFormType = {
+  name: string;
+  email: string;
+  phone: string;
+  country: string;
+  address: string;
+  errors: {};
+};
+
+export type SupplierFormState = {
+  success: boolean;
+  errors?: {
+    name?: { errors: string[] };
+    email?: { errors: string[] };
+    phone?: { errors: string[] };
+    country?: { errors: string[] };
+    address?: { errors: string[] };
+  };
+};

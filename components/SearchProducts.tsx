@@ -4,7 +4,15 @@ import { Search } from "lucide-react";
 import { useRef } from "react";
 import ResetSearchProduct from "./ResetSearchProducts";
 
-const SearchProducts = ({ query, id }: { query?: string; id: string }) => {
+const SearchProducts = ({
+  query,
+  id,
+  search,
+}: {
+  query?: string;
+  id: string;
+  search?: string;
+}) => {
   const formRef = useRef<HTMLFormElement>(null);
   return (
     <Form
@@ -14,7 +22,7 @@ const SearchProducts = ({ query, id }: { query?: string; id: string }) => {
     >
       <input
         name="query"
-        placeholder="search store"
+        placeholder={search ? "search product" : "search store"}
         className="max-w-30  sm:max-w-xl  flex-auto rounded-md px-3.5 py-2 text-base  placeholder:text-gray-500 focus:outline-none sm:text-sm/6"
         defaultValue={query}
       />

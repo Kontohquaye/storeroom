@@ -44,7 +44,8 @@
     "sanity": "^4.15.0",
     "server-only": "^0.0.1",
     "styled-components": "^6.1.19",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

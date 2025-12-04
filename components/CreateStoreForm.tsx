@@ -156,7 +156,7 @@ const CreateStoreForm = () => {
 
       <div className="btn w-full max-w-md">
         {isPending ? (
-          <Button className="w-full" onClick={handleCreate}>
+          <Button className="w-full bg-blue-950" onClick={handleCreate}>
             <div className="loader"></div>
           </Button>
         ) : (

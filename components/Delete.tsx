@@ -12,30 +12,44 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { deleteStore } from "@/lib/actions";
+import { deleteStore, deleteSupplier } from "@/lib/actions";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export function DeleteDialog({
-  storeName,
+  supplierId,
   productName,
   supplierName,
   store,
+  expand,
 }: {
-  storeName?: string;
+  supplierId?: string;
   productName?: string;
   supplierName?: string;
   store?: {
     id: string;
     name: string;
   };
+  expand?: boolean;
 }) {
+  const router = useRouter();
   const [itemId, setItemId] = useState("");
   const [isPending, setIsPending] = useState(false);
   const handleDelete = async (ConfirmationId: string) => {
     setIsPending(true);
     const id = store?.id;
+    // work on this later!!
+
+    if (supplierId && supplierId == ConfirmationId) {
+      const res = await deleteSupplier(supplierId);
+      console.log(res);
+      router.push("/storeroom/suppliers");
+      toast.success(res.message);
+      setIsPending(false);
+      return;
+    }
 
     if (id && id == ConfirmationId) {
       const res = await deleteStore({ id: store.id });
@@ -60,7 +74,7 @@ export function DeleteDialog({
           <Button
             variant={"destructive"}
             type="button"
-            className="cursor-pointer"
+            className={expand ? "cursor-pointer w-full" : "cursor-pointer"}
           >
             <Trash2 />
             Delete
@@ -75,15 +89,15 @@ export function DeleteDialog({
                   {` To confirm ${store?.name} store deletion enter  "${store?.id}"`}
                 </>
               ) : (
-                <div>
-                  {storeName
-                    ? storeName
+                <>
+                  {supplierId
+                    ? `To confirm enter "${supplierId}" `
                     : productName
                       ? productName
                       : supplierName
                         ? supplierName
                         : "name"}{" "}
-                </div>
+                </>
               )}{" "}
               Click delete when you&apos;re done.
             </DialogDescription>

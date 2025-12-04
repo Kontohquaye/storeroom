@@ -38,7 +38,7 @@ const StoreDetails = async ({
                 Add item
               </Button>
             </Link>
-            <SearchProducts id={id} query={query} />
+            <SearchProducts id={id} query={query} search="product" />
           </header>
           <ProductList query={query} id={id} />
         </div>

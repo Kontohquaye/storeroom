@@ -1,9 +1,14 @@
 "use server";
 import { ToSales, ProductTemplateType } from "@/app/types/product";
 import { SingleStore, StoreDataType, StoreListType } from "@/app/types/store";
-import { supplierType } from "@/app/types/supplier";
+import {
+  SupplierFormState,
+  SupplierFormType,
+  supplierType,
+} from "@/app/types/supplier";
 import { auth } from "@/auth";
 import { client } from "@/sanity/client";
+import { z } from "zod";
 import {
   CHECK_EXISTING_PRODUCT,
   FETCH_SPECIFIC_PRODUCT,
@@ -15,6 +20,10 @@ import {
 } from "@/sanity/lib/queries/store";
 import { EXISTING_SUPPLIER } from "@/sanity/lib/queries/suppliers";
 import { writeClient } from "@/sanity/lib/write-client";
+import { setTimeout } from "timers/promises";
+import { form } from "sanity/structure";
+import { count } from "console";
+import { id } from "date-fns/locale";
 // import { time } from "console";
 
 export const createStore = async (data: StoreDataType) => {
@@ -173,6 +182,19 @@ export const addSupplier = async (data: supplierType) => {
   }
 };
 
+// fetch specific supplier
+export const editSingleSupplier = async (id: string, data: any) => {
+  try {
+    const results = await writeClient
+      .patch(id)
+      .set({ ...data })
+      .commit();
+    console.log(results);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // create product
 
 export const createProduct = async (
@@ -213,6 +235,55 @@ export const createProduct = async (
   }
 };
 
+export const deleteSupplier = async (id: string) => {
+  try {
+    const products = await client.fetch(
+      `*[_type == "product" && supplier._ref == ${id}]{ _id }`,
+      { store_id: id }
+    );
+
+    const productIds = products.map((p: { _id: string }) => p._id);
+
+    // 2. Fetch sales for ANY of the products
+    const sales = productIds.length
+      ? await client.fetch(
+          `*[_type == "sales" && product._ref in $productIds]{ _id }`,
+          { productIds }
+        )
+      : [];
+
+    // const sales = await client.fetch(
+    //   `*[_type == "sales" && product._ref == $product_id]{ _id }`,
+    //   { product_id: products._id }
+    // );
+
+    // Step 2: Create a transaction
+    const tx = writeClient.transaction();
+    // Delete all sales
+    sales.forEach((sale: { _id: string }) => {
+      tx.delete(sale._id);
+    });
+
+    // Delete all products
+    products.forEach((p: { _id: string }) => {
+      tx.delete(p._id);
+    });
+
+    // Step 3: Delete the supplier
+    tx.delete(id);
+
+    // Commit the changes
+
+    const respose = await tx.commit();
+    if (respose.results.length > 0)
+      return { deleted: true, message: "success" };
+    return { deleted: false, message: "store non existent!" };
+  } catch (error) {
+    console.log(error);
+    return { deleted: false, message: "error on sever" };
+  }
+};
+
 // move to sale
 export const moveToSales = async (data: ToSales) => {
   const product = await client.fetch(FETCH_SPECIFIC_PRODUCT, {
@@ -243,4 +314,66 @@ export const moveToSales = async (data: ToSales) => {
       .set({ instock: newInstock, on_sale: newOnSale })
       .commit();
   return { message: "sales update", res: true };
+};
+
+// I'm trying Next form action
+
+const schema = z.object({ name: z.email("Invalid Email") });
+export const userForm = async (formData: FormData) => {
+  const validatedData = schema.safeParse({ name: formData.get("name") });
+
+  console.log(formData.get("name"));
+  // console.log(initialState);
+  if (!validatedData.success) {
+    // console.log(
+    //   z.treeifyError(validatedData.error).properties?.name?.errors[0]
+    // );
+    // return {
+    //   error: z.treeifyError(validatedData.error).properties?.name?.errors[0],
+    // };
+  }
+  // return { name: formData.get("name") as string };
+};
+
+//
+
+const phoneRegex = /^[+]?[(]?\d{1,4}[)]?[-\s./0-9]*$/;
+const supplierSchema = z.object({
+  name: z.string("Name must be a string").max(50, " Name too long"),
+  email: z.email("Invalid email"),
+  phone: z
+    .string()
+    .trim()
+    .min(1, "Phone is required")
+    .regex(phoneRegex, "Invalid phone number"),
+  country: z.string("Country must be string").max(60, "Country too long"),
+  address: z.string("Address must be string").max(70, "address too long"),
+});
+export const updateSupplier = async (currentState: any, formData: FormData) => {
+  const validatedData = supplierSchema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    phone: formData.get("contact"),
+    country: formData.get("country"),
+    address: formData.get("address"),
+  });
+
+  // console.log(validatedData);
+  // console.log(currentState);
+  if (!validatedData.success) {
+    const errors = z.treeifyError(validatedData.error).properties;
+    // console.log(errors?.email?.errors[0]);
+    // console.log({ ...currentState, errors });
+
+    return { ...currentState, errors };
+  }
+  // console.log(validatedData);
+  if (validatedData.success) {
+    const res = await editSingleSupplier(formData.get("supplierId") as string, {
+      ...validatedData.data,
+    });
+    console.log(res);
+  }
+  return { ...validatedData.data };
+  // console.log(validatedData);
 };
