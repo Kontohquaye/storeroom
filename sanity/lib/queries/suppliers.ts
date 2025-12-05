@@ -1,3 +1,4 @@
+import { de } from "date-fns/locale";
 import { defineQuery } from "next-sanity";
 
 export const EXISTING_SUPPLIER = defineQuery(
@@ -10,4 +11,8 @@ export const CHECK_SUPPLIERS = defineQuery(
 
 export const FETCH_SINGLE_SUPPLIER = defineQuery(
   `*[_type == "supplier" && _id == $id][0]`
+);
+
+export const FETCH_USER_SUPPLIER = defineQuery(
+  `*[_type == "supplier" && owner._ref == $owner]`
 );

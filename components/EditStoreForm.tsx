@@ -188,7 +188,7 @@ const EditStoreForm = ({ id, store }: { id: string; store: SingleStore }) => {
               </Button>
             )}
 
-            <DeleteDialog storeName={`${id}`} store={deleteParams} />
+            <DeleteDialog store={deleteParams} />
           </div>
         </div>
       ) : (

@@ -8,7 +8,7 @@ import {
 } from "@/app/types/supplier";
 import { auth } from "@/auth";
 import { client } from "@/sanity/client";
-import { z } from "zod";
+import { success, z } from "zod";
 import {
   CHECK_EXISTING_PRODUCT,
   FETCH_SPECIFIC_PRODUCT,
@@ -18,12 +18,17 @@ import {
   FETCH_SINGLE_STORE,
   FETCH_USER_STORES,
 } from "@/sanity/lib/queries/store";
-import { EXISTING_SUPPLIER } from "@/sanity/lib/queries/suppliers";
+import {
+  EXISTING_SUPPLIER,
+  FETCH_USER_SUPPLIER,
+} from "@/sanity/lib/queries/suppliers";
 import { writeClient } from "@/sanity/lib/write-client";
 import { setTimeout } from "timers/promises";
 import { form } from "sanity/structure";
 import { count } from "console";
 import { id } from "date-fns/locale";
+import { init } from "next/dist/compiled/webpack/webpack";
+import { initializeTraceState } from "next/dist/trace";
 // import { time } from "console";
 
 export const createStore = async (data: StoreDataType) => {
@@ -57,9 +62,11 @@ export const fetchStore = async () => {
   const session = await auth();
   // console.log(session);
 
-  const stores = await client.fetch(FETCH_USER_STORES, {
-    owner: session?.user?.id,
-  });
+  const stores = await client
+    .withConfig({ useCdn: false })
+    .fetch(FETCH_USER_STORES, {
+      owner: session?.user?.id,
+    });
   // await storeList;
   const storeList: StoreListType[] = stores.map((item: StoreListType) => ({
     ...item,
@@ -166,7 +173,7 @@ export const addSupplier = async (data: supplierType) => {
         name: data.name.trimEnd(),
         email: data.email.trimEnd(),
       });
-    console.log(isSupplier);
+    // console.log(isSupplier);
     if (isSupplier) {
       return false;
     } else {
@@ -189,7 +196,7 @@ export const editSingleSupplier = async (id: string, data: any) => {
       .patch(id)
       .set({ ...data })
       .commit();
-    console.log(results);
+    // console.log(results);
   } catch (error) {
     console.log(error);
   }
@@ -235,12 +242,29 @@ export const createProduct = async (
   }
 };
 
+export const fetchMySuppliers = async () => {
+  const session = await auth();
+  const suppliers = await client.fetch(FETCH_USER_SUPPLIER, {
+    owner: session?.user?.id,
+  });
+  // console.log(suppliers);
+  return suppliers;
+};
+
+export const fetchSingleProduct = async (id: string) => {
+  const product = await client.fetch(FETCH_SPECIFIC_PRODUCT, {
+    product_id: id,
+  });
+  return product;
+};
+
 export const deleteSupplier = async (id: string) => {
   try {
     const products = await client.fetch(
-      `*[_type == "product" && supplier._ref == ${id}]{ _id }`,
+      `*[_type == "product" && supplier._ref == "${id}"]{ _id }`,
       { store_id: id }
     );
+    // console.log(products);
 
     const productIds = products.map((p: { _id: string }) => p._id);
 
@@ -251,6 +275,7 @@ export const deleteSupplier = async (id: string) => {
           { productIds }
         )
       : [];
+    // console.log(sales);
 
     // const sales = await client.fetch(
     //   `*[_type == "sales" && product._ref == $product_id]{ _id }`,
@@ -322,7 +347,7 @@ const schema = z.object({ name: z.email("Invalid Email") });
 export const userForm = async (formData: FormData) => {
   const validatedData = schema.safeParse({ name: formData.get("name") });
 
-  console.log(formData.get("name"));
+  // console.log(formData.get("name"));
   // console.log(initialState);
   if (!validatedData.success) {
     // console.log(
@@ -372,8 +397,116 @@ export const updateSupplier = async (currentState: any, formData: FormData) => {
     const res = await editSingleSupplier(formData.get("supplierId") as string, {
       ...validatedData.data,
     });
-    console.log(res);
+    // console.log(res);
   }
   return { ...validatedData.data };
   // console.log(validatedData);
+};
+
+const productSchema = z.object({
+  name: z.string("Name must be a string").max(150, " Name too long"),
+  instock: z
+    .number("Instock must be a positive number")
+    .min(0, "Amount cannot be negative"),
+  damaged: z
+    .number("Damaged must be a positive number")
+    .min(0, "Amount cannot be negative"),
+  unit_price: z
+    .number("Unit price must be a positive number")
+    .min(0, "Amount cannot be negative"),
+  id: z.string(),
+});
+export const updateProduct = async (initialState: any, formData: FormData) => {
+  const id = formData.get("productId") as string;
+  const name = formData.get("name") as string;
+  const instock = formData.get("instock") as string;
+  const damaged = formData.get("damaged") as string;
+  const unit_price = formData.get("unit_price") as string;
+  const validatedData = productSchema.safeParse({
+    name: name,
+    instock: Number(instock),
+    damaged: Number(damaged),
+    unit_price: Number(unit_price),
+    id: id,
+  });
+  if (validatedData.success) {
+    const res = await writeClient
+      .patch(id)
+      .set({
+        name: validatedData.data.name,
+        instock: validatedData.data.instock,
+        damaged: validatedData.data.damaged,
+        unit_price: validatedData.data.unit_price,
+      })
+      .commit();
+    // console.log(res);
+    // console.log(validatedData.data);
+    return { ...validatedData.data, success: true };
+  }
+  // will convert back to string too late for changes now
+  if (!validatedData.success) {
+    const errors = z.treeifyError(validatedData.error).properties;
+    // console.log(errors?.email?.errors[0]);
+    // console.log({ ...initialState, errors });
+    return { ...initialState, errors };
+  }
+  // console.log(validatedData);
+};
+
+const stockSchema = z.object({
+  name: z.string("Name must be a string").max(150, " Name too long"),
+  product: z.string("Must be a string"),
+  supplier: z.string("Must be a string"),
+  quantity: z
+    .number("Quantity is required and must be a positive number")
+    .min(0, "Quantity cannot be negative"),
+  damaged: z
+    .number("Damaged is required and must be a positive number")
+    .min(0, "Amount cannot be negative"),
+  unit_price: z.number("Unit is required and price must be a positive number"),
+  to_return: z
+    .number("To return must be a positive number")
+    .min(0, "Amount cannot be negative"),
+  comments: z
+    .string("Comments must be a string")
+    .max(200, " Comments too long"),
+  date: z.string("Select date"),
+  time: z.string("Time is required"),
+});
+
+export const updateStockForm = async (
+  initialState: any,
+  formData: FormData
+) => {
+  const name = formData.get("name") as string;
+  const product = formData.get("product") as string;
+  const supplier = formData.get("supplier") as string;
+  const quantity = formData.get("quantity") as string;
+  const damaged = formData.get("damaged") as string;
+  const unit_price = formData.get("unit_price") as string;
+  const to_return = formData.get("to_return") as string;
+  const comments = formData.get("comments") as string;
+  const date = formData.get("date") as string;
+  const time = formData.get("time") as string;
+  const data = {
+    name,
+    product,
+    supplier,
+    quantity,
+    damaged,
+    unit_price,
+    to_return,
+    comments,
+    date,
+    time,
+  };
+
+  const validatedData = stockSchema.safeParse({ ...data });
+  // console.log(data);
+  if (!validatedData.success) {
+    const errors = z.treeifyError(validatedData.error).properties;
+    return { initialState, errors };
+  }
+
+  return { ...validatedData.data };
 };

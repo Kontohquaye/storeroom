@@ -5,6 +5,7 @@ import SupplierForm from "@/components/SupplierForm";
 
 import { client } from "@/sanity/client";
 import { FETCH_SINGLE_SUPPLIER } from "@/sanity/lib/queries/suppliers";
+import { notFound } from "next/navigation";
 
 const EditSupplier = async ({
   params,
@@ -17,6 +18,8 @@ const EditSupplier = async ({
     .fetch(FETCH_SINGLE_SUPPLIER, {
       id,
     });
+
+  if (!supplier) return notFound();
   // console.log(supplier);
   const supplierName = supplier.name;
   return (

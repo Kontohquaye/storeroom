@@ -74,7 +74,7 @@ const About = () => {
         </div>
 
         <footer className="mt-8 text-sm flex justify-center">
-          <p>&copy; KT</p>
+          <p>&copy; KT {new Date().getFullYear()}</p>
         </footer>
       </section>
     </main>

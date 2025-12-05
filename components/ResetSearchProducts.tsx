@@ -20,7 +20,7 @@ const ResetSearchProduct = ({
     <button className="px-1">
       <Link href={`/storeroom/details/${id}`}>
         <X
-          className="hover:text-red-400 hover:cursor-pointer"
+          className="hover:text-red-400 hover:cursor-pointer  "
           onClick={handleReset}
         />
       </Link>

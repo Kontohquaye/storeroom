@@ -27,6 +27,7 @@ export type Product = {
   owner: { _ref: string; _type: "reference" };
   store: { _ref: string; _type: "reference" };
   supplier: { _ref: string; _type: "reference" };
+  unit_price?: string;
 };
 
 export type ToSales = {

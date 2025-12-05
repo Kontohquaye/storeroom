@@ -103,6 +103,10 @@ const SupplierForm = ({
         </div>
       </form>
       <div className="delete grid  auto-rows-min mt-2 px-4">
+        <p className="text-red-700">
+          Deleting suppliers will delete all products or items linked to
+          it!{" "}
+        </p>
         <DeleteDialog
           expand={true}
           supplierName={supplierName}

@@ -20,13 +20,13 @@ import { useRouter } from "next/navigation";
 
 export function DeleteDialog({
   supplierId,
-  productName,
+  productId,
   supplierName,
   store,
   expand,
 }: {
   supplierId?: string;
-  productName?: string;
+  productId?: string;
   supplierName?: string;
   store?: {
     id: string;
@@ -55,7 +55,7 @@ export function DeleteDialog({
       const res = await deleteStore({ id: store.id });
       setIsPending(false);
       if (res.deleted) toast.success(res.message);
-      if (res.deleted) return window.history.back();
+      if (res.deleted) return router.push("/dashboard");
       if (!res.deleted) toast.error(res.message);
     } else {
       toast.error("enter correct confirmation token");
@@ -92,8 +92,8 @@ export function DeleteDialog({
                 <>
                   {supplierId
                     ? `To confirm enter "${supplierId}" `
-                    : productName
-                      ? productName
+                    : productId
+                      ? productId
                       : supplierName
                         ? supplierName
                         : "name"}{" "}

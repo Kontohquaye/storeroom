@@ -44,7 +44,7 @@ export function ProductCard({
             <ButtonTooltip
               name={"update"}
               tip={"update stock"}
-              to={`/storeroom/product/details/${id}/update-stock`}
+              to={`/storeroom/product/details/${id}/update-stock?product=${product.name}&id=${id}`}
             />
             <ButtonTooltip
               name={"to sales"}
