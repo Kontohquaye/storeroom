@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,23 +12,70 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { deleteStore, deleteSupplier } from "@/lib/actions";
 import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export function DeleteDialog({
-  storeName,
-  productName,
+  supplierId,
+  productId,
   supplierName,
+  store,
+  expand,
 }: {
-  storeName?: string;
-  productName?: string;
+  supplierId?: string;
+  productId?: string;
   supplierName?: string;
+  store?: {
+    id: string;
+    name: string;
+  };
+  expand?: boolean;
 }) {
+  const router = useRouter();
+  const [itemId, setItemId] = useState("");
+  const [isPending, setIsPending] = useState(false);
+  const handleDelete = async (ConfirmationId: string) => {
+    setIsPending(true);
+    const id = store?.id;
+    // work on this later!!
+
+    if (supplierId && supplierId == ConfirmationId) {
+      const res = await deleteSupplier(supplierId);
+      console.log(res);
+      router.push("/storeroom/suppliers");
+      toast.success(res.message);
+      setIsPending(false);
+      return;
+    }
+
+    if (id && id == ConfirmationId) {
+      const res = await deleteStore({ id: store.id });
+      setIsPending(false);
+      if (res.deleted) toast.success(res.message);
+      if (res.deleted) return router.push("/dashboard");
+      if (!res.deleted) toast.error(res.message);
+    } else {
+      toast.error("enter correct confirmation token");
+      setIsPending(false);
+    }
+  };
+  const handleToast = () => {
+    toast.error("delete in progress");
+  };
   return (
     <Dialog>
       <form>
         <DialogTrigger asChild>
           {/* <Button variant="outline">Open Dialog</Button> */}
-          <Button variant={"destructive"} className="cursor-pointer">
+
+          <Button
+            variant={"destructive"}
+            type="button"
+            className={expand ? "cursor-pointer w-full" : "cursor-pointer"}
+          >
             <Trash2 />
             Delete
           </Button>
@@ -36,23 +84,33 @@ export function DeleteDialog({
           <DialogHeader>
             <DialogTitle>Confirm Delete</DialogTitle>
             <DialogDescription>
-              To confirm delete, enter{" "}
-              <b>
-                {storeName
-                  ? storeName
-                  : productName
-                    ? productName
-                    : supplierName
-                      ? supplierName
-                      : "name"}{" "}
-              </b>
-              here.... Click delete when you&apos;re done.
+              {store ? (
+                <>
+                  {` To confirm ${store?.name} store deletion enter  "${store?.id}"`}
+                </>
+              ) : (
+                <>
+                  {supplierId
+                    ? `To confirm enter "${supplierId}" `
+                    : productId
+                      ? productId
+                      : supplierName
+                        ? supplierName
+                        : "name"}{" "}
+                </>
+              )}{" "}
+              Click delete when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" defaultValue="example" />
+              <Label htmlFor="confirmation">Confirmation</Label>
+              <Input
+                id="confirmation"
+                name="name"
+                value={itemId}
+                onChange={(e) => setItemId(e.target.value)}
+              />
             </div>
             {/* <div className="grid gap-3">
               <Label htmlFor="username-1">Username</Label>
@@ -63,9 +121,25 @@ export function DeleteDialog({
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit" variant={"destructive"}>
-              Delete
-            </Button>
+
+            {isPending ? (
+              <Button
+                className="bg-blue-950"
+                type="submit"
+                variant={"default"}
+                onClick={handleToast}
+              >
+                <p className="loader" />
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                variant={"destructive"}
+                onClick={() => handleDelete(itemId)}
+              >
+                Delete
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </form>

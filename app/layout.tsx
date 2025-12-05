@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
+import ThemeScript from "@/components/ThemeScript";
 
 const workSans = localFont({
   src: [
@@ -65,8 +66,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${workSans.variable} antialiased dark`}>
+    <html lang="en" suppressHydrationWarning={true} data-qb-installed="true">
+      <body className={`${workSans.variable} antialiased `}>
+        <ThemeScript />
         {children}
         <Toaster position="top-right" />
       </body>

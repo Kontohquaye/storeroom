@@ -74,7 +74,7 @@ const SupplierDetails = () => {
           <Input
             id="contact"
             type="tel"
-            placeholder="+233-1245609754"
+            placeholder="+233-12545609754"
             value={contact}
             onChange={(e) => setContact(e.target.value)}
           />

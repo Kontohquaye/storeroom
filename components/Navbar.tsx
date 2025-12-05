@@ -1,3 +1,4 @@
+"use client";
 import PillNav from "./PillNav";
 // import Image from "next/image";
 

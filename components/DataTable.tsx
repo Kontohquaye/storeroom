@@ -44,6 +44,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { StoreListType } from "@/app/types/store";
+import { useRouter } from "next/navigation";
 
 export const columns: ColumnDef<StoreListType>[] = [
   {

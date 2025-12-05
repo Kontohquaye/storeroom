@@ -27,7 +27,11 @@ export function SiteHeader({
         <div className="ml-auto flex items-center gap-2">
           {edit && (
             <Button variant="default" size="sm" asChild>
-              <Link href={`/storeroom/product/details/${id}/edit`}>Edit</Link>
+              <Link
+                href={`/storeroom/product/details/${id}/edit?product=${id}`}
+              >
+                Edit
+              </Link>
             </Button>
           )}
           <Button variant="ghost" asChild size="sm" className="hidden sm:flex">

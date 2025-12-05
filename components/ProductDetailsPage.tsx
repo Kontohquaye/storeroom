@@ -125,7 +125,7 @@ const CreateProductDetails = ({
           <Field>
             <FieldLabel htmlFor="unit_price">UnitPrice</FieldLabel>
             <Input
-              id="unitPrice"
+              id="unit_price"
               value={unitPrice}
               onChange={(e) => setUnitPrice(e.target.value)}
               type="number"
@@ -205,7 +205,7 @@ const CreateProductDetails = ({
       {suppliers.length > 0 ? (
         <div className="btn w-full max-w-md">
           <Button
-            className="w-full"
+            className="w-full bg-blue-950"
             type="submit"
             onClick={handleCreateProduct}
           >

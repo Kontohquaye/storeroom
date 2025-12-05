@@ -8,7 +8,7 @@ const DeleteProductButton = () => {
   //   console.log("Path Segments:", pathSegments);
   const id = pathSegments[pathSegments.length - 2];
   //   console.log("Product ID for deletion:", id);
-  return <DeleteDialog storeName={`${id}`} />;
+  return <DeleteDialog expand={true} productId={`${id}`} />;
 };
 
 export default DeleteProductButton;

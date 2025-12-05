@@ -28,11 +28,47 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
+import { convertTime, getId } from "@/lib/utils";
+import { usePathname, useRouter } from "next/navigation";
+import { ToSales } from "@/app/types/product";
+import { moveToSales } from "@/lib/actions";
+import toast from "react-hot-toast";
 
 const MoveToSales = () => {
+  const path = usePathname();
+  const router = useRouter();
+  const id = getId(path);
+  // console.log(id);
   const heading = "To Sales Entry";
   const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
+
+  const currentDate = new Date();
+
+  const [time, setTime] = React.useState(convertTime(currentDate));
+  const [quantity, setQuantity] = React.useState("");
+  const [isPending, setIsPending] = React.useState(false);
+  const [date, setDate] = React.useState<Date | undefined>(currentDate);
+
+  // console.log(formattedDate);
+
+  const data: ToSales = {
+    product: id,
+    quantity: quantity,
+    created: date,
+    time: time,
+  };
+
+  // console.log(time);
+  // const handleTime = () => {};
+  const handleMoveToSales = async () => {
+    if (!quantity || !time || !date) return toast.error("All fields required");
+    setIsPending(true);
+    const response = await moveToSales(data);
+    setIsPending(false);
+    if (!response.res && response.message) toast.error(response.message);
+    if (response.res) toast.success("moved successfully") && router.back();
+  };
+
   return (
     <div className="content">
       <SiteHeader heading={heading} />
@@ -48,23 +84,7 @@ const MoveToSales = () => {
             <FieldSet>
               <FieldGroup>
                 {/* to sales */}
-                <Field>
-                  <FieldLabel>Name</FieldLabel>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select product" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="container">Container</SelectItem>
-                      <SelectItem value="Buckets">Adom rubber</SelectItem>
-                      <SelectItem value="covers">Covers</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FieldDescription>Name of product</FieldDescription>
-                  {/* popup create supplier */}
-                </Field>
-
-                <Field>
+                {/* <Field>
                   <FieldLabel htmlFor="name">Name</FieldLabel>
                   <Input
                     id="name"
@@ -74,7 +94,7 @@ const MoveToSales = () => {
                   <FieldDescription>
                     Choose a unique name for your product (item).
                   </FieldDescription>
-                </Field>
+                </Field> */}
                 {/* quantity to move */}
                 <Field>
                   <FieldLabel htmlFor="quantity">Quantity</FieldLabel>
@@ -82,6 +102,8 @@ const MoveToSales = () => {
                     id="quantity"
                     type="number"
                     placeholder="200 (max:15 char)"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
                   />
                   <FieldDescription>
                     Enter quantity to add to on sales (e.g., 139).
@@ -131,14 +153,24 @@ const MoveToSales = () => {
                 type="time"
                 id="time-picker"
                 step="1"
-                defaultValue="10:30:00"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                // defaultValue={"10:30:00"}
                 className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
               />
             </div>
           </div>
 
           <div className="btn w-full max-w-md">
-            <Button className="w-full">Create </Button>
+            {!isPending ? (
+              <Button className="w-full" onClick={handleMoveToSales}>
+                To sales
+              </Button>
+            ) : (
+              <Button className="w-full  bg-gray-800!">
+                <div className="loader "></div>
+              </Button>
+            )}
           </div>
         </div>
       </div>
