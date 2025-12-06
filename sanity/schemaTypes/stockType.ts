@@ -28,22 +28,22 @@ export const stockType = defineType({
     }),
     defineField({
       name: "unit_price",
-      type: "string",
+      type: "number",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "to_return",
-      type: "string",
+      type: "number",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "quantity",
-      type: "string",
+      type: "number",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "damaged",
-      type: "string",
+      type: "number",
     }),
     defineField({
       name: "date",

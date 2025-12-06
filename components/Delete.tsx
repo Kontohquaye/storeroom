@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { deleteStore, deleteSupplier } from "@/lib/actions";
+import { deleteProduct, deleteStore, deleteSupplier } from "@/lib/actions";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -41,10 +41,22 @@ export function DeleteDialog({
     setIsPending(true);
     const id = store?.id;
     // work on this later!!
+    if (productId && productId == ConfirmationId) {
+      // alert("product deletion not yet implemented");
+      const res = await deleteProduct(productId);
+      // console.log(res);
+      // router.push("/storeroom/products");
+      // toast.success(res.message);
+      router.push("/dashboard");
+      toast.success(res.message);
+      setIsPending(false);
+      // setIsPending(false);
+      return;
+    }
 
     if (supplierId && supplierId == ConfirmationId) {
       const res = await deleteSupplier(supplierId);
-      console.log(res);
+      // console.log(res);
       router.push("/storeroom/suppliers");
       toast.success(res.message);
       setIsPending(false);
@@ -93,7 +105,7 @@ export function DeleteDialog({
                   {supplierId
                     ? `To confirm enter "${supplierId}" `
                     : productId
-                      ? productId
+                      ? `To confirm enter "${productId}" `
                       : supplierName
                         ? supplierName
                         : "name"}{" "}

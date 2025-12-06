@@ -64,6 +64,16 @@ const CreateProductDetails = ({
       setIsPending(false);
       return toast.error("All fields required!");
     }
+    if (
+      Number(inStock) < 0 ||
+      Number(damaged) < 0 ||
+      Number(supplier) < 0 ||
+      Number(onSale) < 0 ||
+      Number(unitPrice) < 0
+    ) {
+      setIsPending(false);
+      return toast.error("quantities should be positive!");
+    }
 
     const response = await createProduct(name, data);
     // console.log(response?.created);

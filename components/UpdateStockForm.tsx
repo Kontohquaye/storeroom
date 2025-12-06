@@ -28,6 +28,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { updateStockForm } from "@/lib/actions";
 import { SupplierListType } from "@/app/types/supplier";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const UpdateStockForm = ({
   suppliers,
@@ -36,6 +38,7 @@ const UpdateStockForm = ({
   suppliers: SupplierListType[];
   productDetails: { productName: string; productId: string };
 }) => {
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
   //   const [supplier, setSupplier] = React.useState("");
   const [date, setDate] = React.useState<Date | undefined>(undefined);
@@ -45,10 +48,26 @@ const UpdateStockForm = ({
     updateStockForm,
     initialState
   );
-  //   console.log(state);
+  // console.log(state);
   //   console.log(state?.errors?.time?.errors[0]);
   //   console.log(state?.errors?.quantity);
   // console.log(errors?.email?.errors[0]);
+
+  React.useEffect(() => {
+    if (state?.success) {
+      toast.success("stock updated");
+      router.refresh();
+      router.replace(`/storeroom/product/details/${productDetails.productId}`);
+    }
+  }, [state?.success]);
+
+  // if (state?.success) {
+  //   toast.success("stock updated");
+  //   router.refresh();
+  //   return router.replace(
+  //     `/storeroom/product/details/${productDetails.productId}`
+  //   );
+  // }
 
   return (
     <div className="content ml-6 mt-4 flex justify-center items-center ">
@@ -260,7 +279,7 @@ const UpdateStockForm = ({
               </p>
             </div>
             <div className="btn w-full max-w-md">
-              <Button className="w-full">
+              <Button disabled={pending} className="w-full">
                 {pending ? <div className="loader text-blue-900!" /> : "Update"}
               </Button>
             </div>

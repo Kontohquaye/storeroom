@@ -10,7 +10,7 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { usePathname, useRouter } from "next/navigation";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { updateProduct } from "@/lib/actions";
 import { Product } from "@/app/types/product";
 import toast from "react-hot-toast";
@@ -23,9 +23,11 @@ const EditProductDetails = ({ product }: { product: Product }) => {
   const initialState = { productId: id };
   const [state, action, pending] = useActionState(updateProduct, initialState);
   //   console.log(state);
-  if (state.success) {
-    toast.success("Product updated successfully!");
-  }
+  useEffect(() => {
+    if (state.success) {
+      toast.success("Product updated successfully!");
+    }
+  }, [state?.success]);
 
   return (
     <div className="container">
@@ -64,20 +66,37 @@ const EditProductDetails = ({ product }: { product: Product }) => {
                 </FieldDescription>
               </Field>
 
-              {/* UnitPrice */}
+              {/* on sale */}
               <Field>
-                <FieldLabel htmlFor="unit_price">UnitPrice</FieldLabel>
+                <FieldLabel htmlFor="on_sale">On sale</FieldLabel>
                 <Input
-                  name="unit_price"
-                  id="unit_price"
+                  name="on_sale"
+                  id="on_sale"
                   type="number"
-                  defaultValue={state.unit_price ?? product.unit_price}
-                  placeholder="200 "
+                  defaultValue={state.on_sale ?? product.on_sale}
+                  placeholder="200 (max:15 char)"
                 />
                 <FieldDescription>
-                  Enter unit price (e.g., GHS 599)
+                  Enter quantity in storage (e.g., 199) excluding damaged ones.
                 </FieldDescription>
               </Field>
+
+              {/* UnitPrice */}
+              <FieldLabel htmlFor="unit_price">UnitPrice</FieldLabel>
+              <Input
+                id="unit_price"
+                name="unit_price"
+                type="number"
+                defaultValue={
+                  Number(state.unit_price).toFixed(2) ??
+                  Number(product.unit_price).toFixed(2)
+                }
+                placeholder="20 (max:15 char)"
+              />
+              <FieldDescription>
+                Enter unit price (e.g., GHS 599)
+              </FieldDescription>
+
               {/* Damaged */}
               <Field>
                 <FieldLabel htmlFor="damaged">Damaged</FieldLabel>

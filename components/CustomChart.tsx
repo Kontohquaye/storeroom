@@ -229,60 +229,101 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { MonthData, StockType } from "@/app/types/stock";
+import { getMonthName } from "@/lib/utils";
 
 export const description = "A multiple bar chart";
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-];
+// const chartData = [
+//   { month: "January", damaged: 186, intact: 80 },
+//   { month: "February", damaged: 305, intact: 200 },
+//   { month: "March", damaged: 305, intact: 200 },
+// ];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  damaged: {
+    label: "Damaged",
     color: "var(--chart-1)",
   },
-  mobile: {
-    label: "Mobile",
+  intact: {
+    label: "InTact",
     color: "var(--chart-2)",
   },
 } satisfies ChartConfig;
 
-export function CustomChart() {
+export function CustomChart({ stockData }: { stockData: StockType[] }) {
+  const rawChartData: MonthData[] =
+    stockData.length > 0
+      ? stockData.map((item) => {
+          return {
+            month: item.date
+              ? getMonthName(item.date)
+              : getMonthName(item._createdAt),
+            damaged: item.damaged,
+            intact: item.damaged,
+          };
+        })
+      : [];
+
+  const chartData = rawChartData.reduce<MonthData[]>((acc, item) => {
+    // Try to find existing month entry
+    const existing = acc.find((d) => d.month === item.month);
+
+    if (existing) {
+      // Add values to existing month
+      existing.damaged += item.damaged;
+      existing.intact += item.intact;
+    } else {
+      // Add new month entry
+      acc.push({ ...item });
+    }
+
+    return acc;
+  }, []);
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Bar Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+    <div className="container">
+      {chartData.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Inventory Overview</CardTitle>
+            <CardDescription>Damaged and Intact Goods</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={chartConfig}>
+              <BarChart accessibilityLayer data={chartData}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 3)}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent indicator="dashed" />}
+                />
+                <Bar dataKey="damaged" fill="var(--color-damaged)" radius={4} />
+                <Bar dataKey="intact" fill="var(--color-intact)" radius={4} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+          <CardFooter className="flex-col items-start gap-2 text-sm">
+            <div className="flex gap-2 leading-none font-medium">
+              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+            </div>
+            <div className="text-muted-foreground leading-none">
+              Showing total visitors for the last 6 months
+            </div>
+          </CardFooter>
+        </Card>
+      )}
+      {chartData.length <= 0 && (
+        <div className="py-10 text-center text-sm text-muted-foreground">
+          No stock data available to display the chart.
         </div>
-        <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
-    </Card>
+      )}
+    </div>
   );
 }

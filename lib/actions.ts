@@ -8,7 +8,7 @@ import {
 } from "@/app/types/supplier";
 import { auth } from "@/auth";
 import { client } from "@/sanity/client";
-import { success, z } from "zod";
+import { z } from "zod";
 import {
   CHECK_EXISTING_PRODUCT,
   FETCH_SPECIFIC_PRODUCT,
@@ -23,12 +23,8 @@ import {
   FETCH_USER_SUPPLIER,
 } from "@/sanity/lib/queries/suppliers";
 import { writeClient } from "@/sanity/lib/write-client";
-import { setTimeout } from "timers/promises";
-import { form } from "sanity/structure";
-import { count } from "console";
-import { id } from "date-fns/locale";
-import { init } from "next/dist/compiled/webpack/webpack";
-import { initializeTraceState } from "next/dist/trace";
+import { FETCH_STOCK_DATA } from "@/sanity/lib/queries/stock";
+import { StockType } from "@/app/types/stock";
 // import { time } from "console";
 
 export const createStore = async (data: StoreDataType) => {
@@ -309,6 +305,65 @@ export const deleteSupplier = async (id: string) => {
   }
 };
 
+//
+//
+// delete product
+export const deleteProduct = async (id: string) => {
+  try {
+    const res = await writeClient.delete(id);
+    console.log(res);
+    return { deleted: true, message: "product deleted successfully" };
+  } catch (error) {
+    console.log(error);
+    return { deleted: false, message: "error on server" };
+  }
+  // const products = await client.fetch(
+  //   `*[_type == "product" && store._ref == $store_id]{ _id }`,
+  //   { store_id: id }
+  // );
+
+  // const productIds = products.map((p: { _id: string }) => p._id);
+
+  // 2. Fetch sales for ANY of the products
+  // const sales = productIds.length
+  //   ? await client.fetch(
+  //       `*[_type == "sales" && product._ref in $productIds]{ _id }`,
+  //       { productIds }
+  //     )
+  //   : [];
+
+  // const sales = await client.fetch(
+  //   `*[_type == "sales" && product._ref == $product_id]{ _id }`,
+  //   { product_id: products._id }
+  // );
+
+  // Step 2: Create a transaction
+  // const tx = writeClient.transaction();
+  // Delete all sales
+  // sales.forEach((sale: { _id: string }) => {
+  //   tx.delete(sale._id);
+  // });
+
+  // Delete all products
+  // products.forEach((p: { _id: string }) => {
+  //   tx.delete(p._id);
+  // });
+
+  // Step 3: Delete the store
+  // tx.delete(id);
+
+  // Commit the changes
+
+  // const respose = await tx.commit();
+  //   if (respose.results.length > 0)
+  //     return { deleted: true, message: "success" };
+  //   return { deleted: false, message: "store non existent!" };
+  // } catch (error) {
+  //   console.log(error);
+  //   return { deleted: false, message: "error on sever" };
+  // }
+};
+
 // move to sale
 export const moveToSales = async (data: ToSales) => {
   const product = await client.fetch(FETCH_SPECIFIC_PRODUCT, {
@@ -408,6 +463,9 @@ const productSchema = z.object({
   instock: z
     .number("Instock must be a positive number")
     .min(0, "Amount cannot be negative"),
+  on_sale: z
+    .number("On sale must be a positive number")
+    .min(0, "Amount cannot be negative"),
   damaged: z
     .number("Damaged must be a positive number")
     .min(0, "Amount cannot be negative"),
@@ -420,11 +478,13 @@ export const updateProduct = async (initialState: any, formData: FormData) => {
   const id = formData.get("productId") as string;
   const name = formData.get("name") as string;
   const instock = formData.get("instock") as string;
+  const on_sale = formData.get("on_sale") as string;
   const damaged = formData.get("damaged") as string;
   const unit_price = formData.get("unit_price") as string;
   const validatedData = productSchema.safeParse({
     name: name,
     instock: Number(instock),
+    on_sale: Number(on_sale),
     damaged: Number(damaged),
     unit_price: Number(unit_price),
     id: id,
@@ -435,6 +495,7 @@ export const updateProduct = async (initialState: any, formData: FormData) => {
       .set({
         name: validatedData.data.name,
         instock: validatedData.data.instock,
+        on_sale: validatedData.data.on_sale,
         damaged: validatedData.data.damaged,
         unit_price: validatedData.data.unit_price,
       })
@@ -481,10 +542,10 @@ export const updateStockForm = async (
   const name = formData.get("name") as string;
   const product = formData.get("product") as string;
   const supplier = formData.get("supplier") as string;
-  const quantity = formData.get("quantity") as string;
-  const damaged = formData.get("damaged") as string;
-  const unit_price = formData.get("unit_price") as string;
-  const to_return = formData.get("to_return") as string;
+  const quantity = Number(formData.get("quantity") as string);
+  const damaged = Number(formData.get("damaged") as string);
+  const unit_price = Number(formData.get("unit_price") as string);
+  const to_return = Number(formData.get("to_return") as string);
   const comments = formData.get("comments") as string;
   const date = formData.get("date") as string;
   const time = formData.get("time") as string;
@@ -507,6 +568,76 @@ export const updateStockForm = async (
     const errors = z.treeifyError(validatedData.error).properties;
     return { initialState, errors };
   }
+  // console.log(validatedData.data);
+  if (validatedData.success) {
+    const productDetail = await writeClient.fetch(FETCH_SPECIFIC_PRODUCT, {
+      product_id: validatedData.data.product,
+    });
+    const newInstock = (
+      Number(productDetail.instock) + Number(validatedData.data.quantity)
+    ).toString();
+    const newDamaged = (
+      Number(productDetail.damaged) + Number(validatedData.data.damaged)
+    ).toString();
 
-  return { ...validatedData.data };
+    const newUnitPrice = (
+      (Number(productDetail.unit_price) +
+        Number(validatedData.data.unit_price)) /
+      2
+    ).toString();
+
+    // Just learned about transactions in sanity (second implementation) )
+    const stockUp = writeClient.transaction();
+
+    const product = {
+      _type: "reference",
+      _ref: validatedData.data.product,
+    };
+
+    const supplier = {
+      _type: "reference",
+      _ref: validatedData.data.supplier,
+    };
+
+    stockUp.create({
+      _type: "stock",
+      ...validatedData.data,
+      product: { ...product },
+      supplier: { ...supplier },
+    });
+
+    stockUp
+      .patch(validatedData.data.product, (patch) =>
+        patch.set({
+          instock: newInstock,
+          damaged: newDamaged,
+          unit_price: newUnitPrice,
+        })
+      )
+      .commit();
+    // console.log(stockUp);
+
+    return { ...validatedData.data, success: true };
+  }
+};
+
+export const fetchProductStocks = async (productId: string) => {
+  try {
+    const stocks = await client.fetch(FETCH_STOCK_DATA, { productId });
+    // console.log(stocks);
+
+    // sumbmit only last three months of data
+    // understand date functions better later
+    const now = new Date();
+    const twoMonthsAgo = new Date();
+    twoMonthsAgo.setMonth(now.getMonth() - 3);
+
+    const filteredStocks = stocks.filter((item: StockType) => {
+      const createdAt = new Date(item._createdAt);
+      return createdAt >= twoMonthsAgo;
+    });
+    return filteredStocks;
+  } catch (error) {
+    console.log(error);
+  }
 };

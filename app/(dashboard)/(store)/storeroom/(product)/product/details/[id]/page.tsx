@@ -1,9 +1,12 @@
 import { ProductTemplateType } from "@/app/types/product";
+import { StockType } from "@/app/types/stock";
 import { CustomChart } from "@/components/CustomChart";
 import { SiteHeader } from "@/components/PageHeader";
 import { ProductCard } from "@/components/ProductCard";
+import { fetchProductStocks } from "@/lib/actions";
 import { client } from "@/sanity/client";
 import { FETCH_SPECIFIC_PRODUCT } from "@/sanity/lib/queries/products";
+import { notFound } from "next/navigation";
 
 const ProductDetails = async ({
   params,
@@ -17,6 +20,13 @@ const ProductDetails = async ({
       product_id: id,
     }
   );
+
+  const stockData: StockType[] = await fetchProductStocks(id);
+  // console.log("Stock data:", stockData);
+
+  if (!product) {
+    return notFound();
+  }
   // console.log(product);
   return (
     <div className="container min-w-full">
@@ -27,7 +37,7 @@ const ProductDetails = async ({
             <ProductCard id={id} product={product} />
 
             <div className="px-4 lg:px-6">
-              <CustomChart />
+              <CustomChart stockData={stockData} />
             </div>
           </div>
         </div>

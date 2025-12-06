@@ -3,6 +3,7 @@ import { FolderPen } from "lucide-react";
 import { SiteHeader } from "@/components/PageHeader";
 import EditProductDetails from "@/components/EditProductForm";
 import { fetchSingleProduct } from "@/lib/actions";
+import { notFound } from "next/navigation";
 
 const EditProduct = async ({
   searchParams,
@@ -14,6 +15,9 @@ const EditProduct = async ({
   // console.log(id);
   const product = await fetchSingleProduct(id!);
   // console.log(product);
+  if (!product) {
+    return notFound();
+  }
   return (
     <div className="content">
       <SiteHeader heading={heading} />

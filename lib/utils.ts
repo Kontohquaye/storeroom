@@ -91,3 +91,12 @@ export const getId = (path: string) => {
   const id = split[split.length - 2];
   return id;
 };
+
+// convert date for stocks
+export const getMonthName = (dateString: string) => {
+  const date = new Date(dateString);
+  const monthName = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+  }).format(date);
+  return monthName;
+};
