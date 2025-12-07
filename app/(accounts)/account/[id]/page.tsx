@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import AccountForm from "@/components/AccountForm";
 import { SiteHeader } from "@/components/PageHeader";
+import PaystackButton from "@/components/PayStackButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { getAvatarFallback } from "@/lib/utils";
@@ -39,6 +40,7 @@ const ProfilePage = async () => {
 
       <div className="edit">
         <AccountForm />
+        <PaystackButton />
       </div>
     </div>
   );
