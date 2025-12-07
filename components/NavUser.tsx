@@ -2,10 +2,10 @@
 
 import {
   BadgeCheck,
-  Bell,
+  // Bell,
   ChevronsUpDown,
   CreditCard,
-  Sparkles,
+  // Sparkles,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -94,14 +94,16 @@ export function NavUser({ user }: sessionData) {
                   href={`/account/${user?.id}`}
                   className="flex items-center"
                 >
-                  <BadgeCheck />
-                  Account
+                  <CreditCard />
+                  Billing
+                  {/* <BadgeCheck />
+                  Account */}
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem>
                 <CreditCard />
                 Billing
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               {/* <DropdownMenuItem>
                 <Bell />
                 Notifications

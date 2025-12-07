@@ -16,6 +16,7 @@ import { Product } from "@/app/types/product";
 import { FETCH_PRODUCT_STORE } from "@/sanity/lib/queries/store";
 import { Badge } from "./ui/badge";
 import { EmptyProducts } from "./EmptyProducts";
+import SearchProductResults from "./SearchProduct";
 
 export async function ProductList({
   query,
@@ -34,9 +35,12 @@ export async function ProductList({
   return (
     <div className="container">
       {query ? (
-        <p>
-          Results for <b>{`${query}`}</b>
-        </p>
+        <div className="results">
+          <p>
+            Results for <b>{`${query}`}</b>
+          </p>
+          <SearchProductResults query={query} product={productsList} />
+        </div>
       ) : (
         <div className="table-container p-2">
           {productsList.length > 0 ? (

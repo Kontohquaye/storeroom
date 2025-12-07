@@ -2,6 +2,7 @@ import { EmptyProducts } from "@/components/EmptyProducts";
 import { SiteHeader } from "@/components/PageHeader";
 import { ProductList } from "@/components/ProductList";
 import SearchProducts from "@/components/SearchProducts";
+import SearchResults from "@/components/SearchResults";
 import { Button } from "@/components/ui/button";
 // import { Button } from "@/components/ui/button";
 import { client } from "@/sanity/client";
@@ -40,6 +41,7 @@ const StoreDetails = async ({
             </Link>
             <SearchProducts id={id} query={query} search="product" />
           </header>
+
           <ProductList query={query} id={id} />
         </div>
       ) : (
