@@ -36,13 +36,13 @@ const ProfilePage = async () => {
                 {getAvatarFallback(session?.user?.name)}
               </AvatarFallback>
             </Avatar>
-            <div className="other text-sm">
+            <div className="other text-[12px] sm:text-sm">
               <p>{session?.user?.name}</p>
               <p className="text-gray-500">{session?.user?.email}</p>
             </div>
           </div>
 
-          <div className="subscripton flex items-center gap-2">
+          <div className="subscripton flex items-center gap-2 text-[12px] sm:text-sm">
             {formatDate(new Date(Date.now()))}
           </div>
         </header>
