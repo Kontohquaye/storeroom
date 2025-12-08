@@ -111,6 +111,7 @@ export const deleteStore = async ({ id }: { id: string }) => {
     );
 
     const productIds = products.map((p: { _id: string }) => p._id);
+    // console.log(productIds);
 
     // 2. Fetch sales for ANY of the products
     const sales = productIds.length
@@ -148,7 +149,7 @@ export const deleteStore = async ({ id }: { id: string }) => {
     return { deleted: false, message: "store non existent!" };
   } catch (error) {
     console.log(error);
-    return { deleted: false, message: "error on sever" };
+    return { deleted: false, message: "error 1on sever" };
   }
 };
 

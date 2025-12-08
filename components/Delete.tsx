@@ -84,6 +84,7 @@ export function DeleteDialog({
           {/* <Button variant="outline">Open Dialog</Button> */}
 
           <Button
+            disabled={isPending}
             variant={"destructive"}
             type="button"
             className={expand ? "cursor-pointer w-full" : "cursor-pointer"}
@@ -106,9 +107,7 @@ export function DeleteDialog({
                     ? `To confirm enter "${supplierId}" `
                     : productId
                       ? `To confirm enter "${productId}" `
-                      : supplierName
-                        ? supplierName
-                        : "name"}{" "}
+                      : "Enter confirmation token"}{" "}
                 </>
               )}{" "}
               Click delete when you&apos;re done.
