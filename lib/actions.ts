@@ -25,6 +25,8 @@ import {
 import { writeClient } from "@/sanity/lib/write-client";
 import { FETCH_STOCK_DATA } from "@/sanity/lib/queries/stock";
 import { StockType } from "@/app/types/stock";
+import { setExpiry } from "./utils";
+import { FETCH_SPECIFIC_SUBSCRIPTION } from "@/sanity/lib/queries/subscription";
 // import { time } from "console";
 
 export const createStore = async (data: StoreDataType) => {
@@ -398,22 +400,22 @@ export const moveToSales = async (data: ToSales) => {
 
 // I'm trying Next form action
 
-const schema = z.object({ name: z.email("Invalid Email") });
-export const userForm = async (formData: FormData) => {
-  const validatedData = schema.safeParse({ name: formData.get("name") });
+// const schema = z.object({ name: z.email("Invalid Email") });
+// export const userForm = async (formData: FormData) => {
+//   const validatedData = schema.safeParse({ name: formData.get("name") });
 
-  // console.log(formData.get("name"));
-  // console.log(initialState);
-  if (!validatedData.success) {
-    // console.log(
-    //   z.treeifyError(validatedData.error).properties?.name?.errors[0]
-    // );
-    // return {
-    //   error: z.treeifyError(validatedData.error).properties?.name?.errors[0],
-    // };
-  }
-  // return { name: formData.get("name") as string };
-};
+//   // console.log(formData.get("name"));
+//   // console.log(initialState);
+//   if (!validatedData.success) {
+//     // console.log(
+//     //   z.treeifyError(validatedData.error).properties?.name?.errors[0]
+//     // );
+//     // return {
+//     //   error: z.treeifyError(validatedData.error).properties?.name?.errors[0],
+//     // };
+//   }
+//   // return { name: formData.get("name") as string };
+// };
 
 //
 
@@ -639,5 +641,126 @@ export const fetchProductStocks = async (productId: string) => {
     return filteredStocks;
   } catch (error) {
     console.log(error);
+  }
+};
+
+//
+//
+
+//
+//Payments
+export const createInvoice = async ({
+  plan,
+  amount,
+}: {
+  plan: string;
+  amount: number;
+}) => {
+  const session = await auth();
+  const { name, email, id } = session?.user!;
+  const startDate = new Date();
+  const subscriptionDetails = await fetchSubscription(id!);
+  const invoiceDetails = await writeClient.create({
+    _type: "invoice",
+    subscription: {
+      _type: "reference",
+      _ref: await subscriptionDetails.subscription._id,
+    },
+    amount_paid: amount,
+    plan,
+    date_paid: startDate,
+    expires: await subscriptionDetails.subscription.expiry,
+  });
+
+  return { message: `invoice created for ${email}` };
+};
+
+export const fetchSubscription = async (id: string) => {
+  const subscription = await client.fetch(FETCH_SPECIFIC_SUBSCRIPTION, { id });
+  if (subscription && subscription._createdAt) {
+    // console.log(subscription);
+    // console.log({ message: "No subscriber", existing: true, subscription });
+    return { message: "subscriber", existing: true, subscription };
+  } else {
+    console.log({ message: "No subscriber", existing: false, subscription });
+    return { message: "No subscriber", existing: false, subscription };
+  }
+};
+
+export const subscribeUser = async ({
+  plan,
+  amount,
+}: {
+  plan: string;
+  amount: number;
+}) => {
+  const session = await auth();
+  const { name, email, id } = session?.user!;
+  // console.log(plan, amount);
+  const existingSubscriber = await fetchSubscription(id!);
+  // console.log(existingSubscriber);
+  if (!existingSubscriber.existing) {
+    try {
+      const startDate = new Date();
+      const expiryDate = setExpiry(startDate, plan);
+
+      const res = await writeClient.create({
+        _type: "subscription",
+        name,
+        email,
+        plan,
+        subscription_id: {
+          _type: "reference",
+          _ref: id,
+        },
+        status: "active",
+        expiry: expiryDate,
+      });
+      console.log(res);
+
+      if (res._createdAt) {
+        const invoice = await createInvoice({ plan, amount });
+        console.log(invoice);
+        return {
+          message: `subscription for ${email?.split("@")[0]} created😁`,
+          subscribed: true,
+        };
+      }
+
+      // return { message: `subscription for ${email?.split("@")[0]} created😁` };
+    } catch (error) {
+      console.log(error);
+      return { message: " internal error" };
+    }
+  } else {
+    // for existing users
+    const startDate = new Date();
+    const expiryDate = setExpiry(startDate, plan);
+    const subscriptionDetails = await fetchSubscription(id!);
+    // console.log(subscriptionDetails);
+    const updateTransProg = writeClient.transaction();
+    //
+    updateTransProg.create({
+      _type: "invoice",
+      subscription: {
+        _type: "reference",
+        _ref: subscriptionDetails.subscription._id,
+      },
+      amount_paid: amount,
+      plan,
+      date_paid: startDate,
+      expires: expiryDate,
+    });
+
+    updateTransProg.patch(subscriptionDetails.subscription._id, (patch) =>
+      patch.set({
+        plan,
+        expiry: expiryDate,
+        status: "active",
+      })
+    );
+    updateTransProg.commit();
+
+    return { message: "subscription activated", subscribed: true };
   }
 };

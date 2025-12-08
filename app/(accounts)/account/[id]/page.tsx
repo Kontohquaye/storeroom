@@ -1,19 +1,31 @@
 import { auth } from "@/auth";
-import AccountForm from "@/components/AccountForm";
+import BillingPage from "@/components/BillingPage";
+
 import { SiteHeader } from "@/components/PageHeader";
-import PaystackButton from "@/components/PayStackButton";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { getAvatarFallback } from "@/lib/utils";
+import { formatDate, getAvatarFallback } from "@/lib/utils";
+import { client } from "@/sanity/client";
+import { FETCH_SPECIFIC_SUBSCRIPTION } from "@/sanity/lib/queries/subscription";
 
 const ProfilePage = async () => {
   const session = await auth();
+  let subscription;
+  if (session?.user) {
+    const subscriptionDetails = await client
+      .withConfig({ useCdn: false })
+      .fetch(FETCH_SPECIFIC_SUBSCRIPTION, {
+        id: session?.user?.id,
+      });
+    subscription = subscriptionDetails;
+  }
   // console.log(session);
   return (
-    <div className="container max-w-full">
+    <div className="container max-w-full ">
       <SiteHeader heading="Account Profile" />
-      <div className="header">
-        <header className="flex justify-between items-center">
+      <div className="header mt-2.5 mx-2">
+        <header className="flex justify-between items-center py-2">
           <div className="flex item-center  gap-1.5">
             <Avatar className="w-10 h-10">
               <AvatarImage
@@ -31,16 +43,17 @@ const ProfilePage = async () => {
           </div>
 
           <div className="subscripton flex items-center gap-2">
-            <p>subscription:</p>
-            <Badge>active</Badge>
+            {formatDate(new Date(Date.now()))}
           </div>
         </header>
       </div>
       {/* Billing */}
 
       <div className="edit">
-        <AccountForm />
-        <PaystackButton />
+        <BillingPage
+          email={session?.user?.email!}
+          subscription={subscription}
+        />
       </div>
     </div>
   );

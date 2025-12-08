@@ -6,9 +6,8 @@ import { productType } from "./productType";
 import { salesType } from "./salesType";
 import { stockType } from "./stockType";
 import { subscriptionType } from "./subscriptionType";
-import { couponType } from "./couponType";
-import { invoiceType } from "./invoiceType";
 import { giftCouponType } from "./giftCouponType";
+import { invoiceType } from "./invoiceType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -19,8 +18,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     salesType,
     stockType,
     subscriptionType,
-    couponType,
-    invoiceType,
     giftCouponType,
+    invoiceType,
   ],
 };

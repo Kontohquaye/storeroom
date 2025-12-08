@@ -6,7 +6,7 @@ export const invoiceType = defineType({
   type: "document",
   fields: [
     defineField({
-      name: "subcription",
+      name: "subscription",
       type: "reference",
       validation: (Rule) => Rule.required(),
       to: [{ type: "subscription" }],
