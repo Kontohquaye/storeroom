@@ -100,3 +100,26 @@ export const getMonthName = (dateString: string) => {
   }).format(date);
   return monthName;
 };
+
+// set subscriptionExpiry
+export function setExpiry(date: Date, plan: string) {
+  const result = new Date(date);
+  if (plan === "monthly") {
+    result.setMonth(result.getMonth() + 1);
+  } else {
+    result.setFullYear(result.getFullYear() + 1);
+  }
+  return result.toISOString();
+}
+
+export function isExpired(expiry: string | Date) {
+  const expiryDate = new Date(expiry);
+  const now = new Date();
+
+  return now > expiryDate; // true if expired
+}
+
+export function capitalizeFirst(str: string) {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}

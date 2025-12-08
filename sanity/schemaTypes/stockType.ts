@@ -24,7 +24,7 @@ export const stockType = defineType({
     }),
     defineField({
       name: "comments",
-      type: "string",
+      type: "text",
     }),
     defineField({
       name: "unit_price",

@@ -47,7 +47,7 @@ const Suppliers = async () => {
             </TableHeader>
             <TableBody>
               {suppliers.map((supplier: SupplierListType) => (
-                <TableRow key={supplier.name}>
+                <TableRow key={supplier._id}>
                   {/* <Link href={``}></Link> */}
                   <TableCell className="font-medium">{supplier.name}</TableCell>
                   <TableCell>{supplier.email}</TableCell>

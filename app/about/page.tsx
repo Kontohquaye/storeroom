@@ -4,7 +4,7 @@ import Link from "next/link";
 const About = () => {
   return (
     <main className="max-w-4xl mx-auto p-6 sm:p-10 font-sans text-black dark:text-white">
-      <section className="backdrop-blur-sm rounded-2xl shadow-lg ">
+      <section>
         <header className="flex items-start gap-4 mb-6">
           <div className="flex-none w-14 h-14 rounded-lg  text-white grid place-items-center text-2xl font-bold">
             <Link href={"/"}>
