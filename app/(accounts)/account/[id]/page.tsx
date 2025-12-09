@@ -24,7 +24,7 @@ const ProfilePage = async () => {
   return (
     <div className="container max-w-full ">
       <SiteHeader heading="Account Profile" />
-      <div className="header mt-2.5 mx-2">
+      <div className="header mt-2.5 sm:mx-2">
         <header className="flex justify-between items-center py-2">
           <div className="flex item-center  gap-1.5">
             <Avatar className="w-10 h-10">

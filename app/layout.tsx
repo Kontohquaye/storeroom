@@ -3,7 +3,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
 import ThemeScript from "@/components/ThemeScript";
-import Script from "next/script";
+// import Script from "next/script";
 
 const workSans = localFont({
   src: [
