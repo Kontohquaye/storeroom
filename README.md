@@ -41,7 +41,9 @@ Log in to service with google OAuth
   - update and delete storage room.
 
   ![creating a store](https://files.edgestore.dev/9fafx9jpqygtarv1/storeroomDocs/_public/e812adab-b36f-4d29-9d0d-c2824b469f6f.webp)
+
   **_storeroom details page:_**
+
   ![storeroom page](https://files.edgestore.dev/9fafx9jpqygtarv1/storeroomDocs/_public/0815d361-bcef-46ce-a934-ab2dbdd79648.webp)
 
   **_storeroom actions for update and deletion_**
