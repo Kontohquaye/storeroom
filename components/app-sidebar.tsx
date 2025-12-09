@@ -103,7 +103,7 @@ export async function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {data.user.id && <NavUser user={data.user} />}
       </SidebarFooter>
     </Sidebar>
   );
