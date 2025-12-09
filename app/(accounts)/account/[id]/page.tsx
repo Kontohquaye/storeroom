@@ -25,8 +25,8 @@ const ProfilePage = async () => {
     <div className="container max-w-full ">
       <SiteHeader heading="Account Profile" />
       <div className="header mt-2.5 sm:mx-2">
-        <header className="flex justify-between items-center py-2">
-          <div className="flex item-center  gap-1.5">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 py-2">
+          <div className="flex items-center gap-1.5">
             <Avatar className="w-10 h-10">
               <AvatarImage
                 src={session?.user?.image || ""}
@@ -36,13 +36,16 @@ const ProfilePage = async () => {
                 {getAvatarFallback(session?.user?.name)}
               </AvatarFallback>
             </Avatar>
-            <div className="other text-sm">
-              <p>{session?.user?.name}</p>
-              <p className="text-gray-500">{session?.user?.email}</p>
+
+            <div className="text-sm">
+              <p className="font-medium leading-none">{session?.user?.name}</p>
+              <p className="text-gray-500 leading-none">
+                {session?.user?.email}
+              </p>
             </div>
           </div>
 
-          <div className="subscripton flex items-center gap-2">
+          <div className="text-sm text-gray-600">
             {formatDate(new Date(Date.now()))}
           </div>
         </header>
