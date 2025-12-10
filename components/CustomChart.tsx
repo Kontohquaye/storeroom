@@ -252,6 +252,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function CustomChart({ stockData }: { stockData: StockType[] }) {
+  // console.log(stockData);
   const rawChartData: MonthData[] =
     stockData.length > 0
       ? stockData.map((item) => {
@@ -260,7 +261,7 @@ export function CustomChart({ stockData }: { stockData: StockType[] }) {
               ? getMonthName(item.date)
               : getMonthName(item._createdAt),
             damaged: item.damaged,
-            intact: item.damaged,
+            intact: item.quantity,
           };
         })
       : [];
@@ -268,7 +269,7 @@ export function CustomChart({ stockData }: { stockData: StockType[] }) {
   const chartData = rawChartData.reduce<MonthData[]>((acc, item) => {
     // Try to find existing month entry
     const existing = acc.find((d) => d.month === item.month);
-
+    // console.log(existing);
     if (existing) {
       // Add values to existing month
       existing.damaged += item.damaged;

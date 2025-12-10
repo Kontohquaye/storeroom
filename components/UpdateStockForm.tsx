@@ -115,7 +115,8 @@ const UpdateStockForm = ({
                       </p>
                     )}
                     <FieldDescription>
-                      Enter quantity of products recieved from order.
+                      Enter quantity of products recieved from order. excluding
+                      damaged ones
                     </FieldDescription>
                   </Field>
                   {/* Damaged stock */}
