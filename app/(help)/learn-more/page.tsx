@@ -23,27 +23,37 @@ const LearnMore = () => {
           </p>
         </Step>
         <Step>
-          <h2>Step 2</h2>
+          <h2>Creating a store</h2>
           <img
             style={{
-              height: "100px",
+              height: "200px",
               width: "100%",
               objectFit: "cover",
               objectPosition: "center -70px",
               borderRadius: "15px",
               marginTop: "1em",
             }}
-            src="https://www.purrfectcatgifts.co.uk/cdn/shop/collections/Funny_Cat_Cards_640x640.png?v=1663150894"
+            src="https://files.edgestore.dev/9fafx9jpqygtarv1/storeroomDocs/_public/ae8ec318-00da-4825-ad09-77c5c766b358.webp"
           />
-          <p>Custom step content!</p>
+          <p>Click on create store and provide details!</p>
         </Step>
         <Step>
-          <h2>How about an input?</h2>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your name?"
+          <h2>Adding Items</h2>
+          <img
+            style={{
+              height: "100px",
+              width: "100%",
+              objectFit: "cover",
+              objectPosition: "center 10px",
+              borderRadius: "15px",
+              marginTop: "1em",
+            }}
+            src="https://files.edgestore.dev/9fafx9jpqygtarv1/storeroomDocs/_public/da2cc48a-4620-457d-bee8-1819469ad9c8.webp"
           />
+          <p>Click on add items and fill in the details</p>
+          <p>
+            In stock must be all items in good state excluding the damaged ones
+          </p>
         </Step>
         <Step>
           <h2>Congratulations on completion🥳🥳</h2>

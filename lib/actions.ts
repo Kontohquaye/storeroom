@@ -27,6 +27,7 @@ import { FETCH_STOCK_DATA } from "@/sanity/lib/queries/stock";
 import { StockType } from "@/app/types/stock";
 import { setExpiry } from "./utils";
 import { FETCH_SPECIFIC_SUBSCRIPTION } from "@/sanity/lib/queries/subscription";
+import { CHECK_EXISTING_COUPON } from "@/sanity/lib/queries/coupon";
 // import { time } from "console";
 
 export const createStore = async (data: StoreDataType) => {
@@ -622,6 +623,33 @@ export const updateStockForm = async (
     return { ...validatedData.data, success: true };
   }
 };
+
+//
+//
+//
+// coupouns
+const couponsSchema = z.object({
+  code: z.string("Schema must be a string").max(7, " invalid coupon"),
+});
+export async function verifyCoupons(initialState: any, formData: FormData) {
+  const validatedFields = couponsSchema.safeParse({
+    code: formData.get("code") as string,
+  });
+  // console.log(validatedFields.data);
+
+  if (validatedFields.success) {
+    const code = validatedFields.data.code;
+    const res = await client.fetch(CHECK_EXISTING_COUPON, { code: code });
+    // console.log(res);
+    const discount = (res._createdAt && res.value) ?? 0;
+    return { ...validatedFields, discount };
+  } else {
+    const errors = z.treeifyError(validatedFields.error).properties;
+    return { success: false, error: errors?.code?.errors, discount: 0 };
+  }
+
+  // ...
+}
 
 export const fetchProductStocks = async (productId: string) => {
   try {

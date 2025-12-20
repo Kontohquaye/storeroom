@@ -38,7 +38,7 @@ export function EmptyProducts({ store }: { store?: string }) {
             className="text-muted-foreground"
             size="sm"
           >
-            <Link href="/learn-more/product" target="_blank" rel="noreferrer">
+            <Link href="/learn-more" target="_blank" rel="noreferrer">
               Learn More <ArrowUpRightIcon />
             </Link>
           </Button>
